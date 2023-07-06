@@ -64,9 +64,7 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 
 Here is a class diagram that represents the relationships between the different entities in your application:
 
-![Class Diagram](https://showme.redstarplugin.com/d/O9ebgzVS)
-
-[You can view this diagram in a new tab.](https://showme.redstarplugin.com/d/O9ebgzVS)
+[![Diagram](https://mermaid.ink/img/pako:eNqNkt9rwjAQx_-Vco-jam2b_sjb2AZ7cCDIXkZeQnJqMG0kScec-L8vlSpOUDxI-Ob45LjvJXsQRiJQEJo796r4yvKGtVGIT4c2YjBlEI1GQTwFMTfORzQSFrlHN1lzd5t9MU2D7cP4TG0wsCv1HciGq9aHdYefWyM70Zd3qLWbvHM3U86jvHNF851WjznoxQe3G_RbzUXf2Rk9DuGm2bvYYNKiwN7nAA5OHmJPFq7g54XpXZnLqV22f3N453ZPO8TQoA0PIMOv2PdZBn6NDTKgQUpc8k57Bqw9BJR33ix2rQDqbYcxdFsZ5jr8o__JN6m8sUCXXLuQ3PL2y5gzE45A9_ADdJpU4zREQUiWV0lZlTHsgI5SMi4qUickL1OSZyUhhxh-jyWScZ1WaVnURZ5kpCZZdfgD1K_VRw?type=png)](https://mermaid.live/edit#pako:eNqNkt9rwjAQx_-Vco-jam2b_sjb2AZ7cCDIXkZeQnJqMG0kScec-L8vlSpOUDxI-Ob45LjvJXsQRiJQEJo796r4yvKGtVGIT4c2YjBlEI1GQTwFMTfORzQSFrlHN1lzd5t9MU2D7cP4TG0wsCv1HciGq9aHdYefWyM70Zd3qLWbvHM3U86jvHNF851WjznoxQe3G_RbzUXf2Rk9DuGm2bvYYNKiwN7nAA5OHmJPFq7g54XpXZnLqV22f3N453ZPO8TQoA0PIMOv2PdZBn6NDTKgQUpc8k57Bqw9BJR33ix2rQDqbYcxdFsZ5jr8o__JN6m8sUCXXLuQ3PL2y5gzE45A9_ADdJpU4zREQUiWV0lZlTHsgI5SMi4qUickL1OSZyUhhxh-jyWScZ1WaVnURZ5kpCZZdfgD1K_VRw)
 
 [You can edit this diagram online if you want to make any changes.](https://showme.redstarplugin.com/s/hy9cWTZt)
 
