@@ -20,9 +20,9 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 [![My Skills](https://skillicons.dev/icons?i=js,py,flask,react,vite)](https://skillicons.dev)
 
 ## Schema:
-[Database Schema](https://dbdiagram.io/d/64a2f12702bd1c4a5e6ce584)
+[Database Schema](https://dbdiagram.io/d/64a9138c02bd1c4a5eb655f4)
 
-![Database Schema](https://github.com/username/project/assets/schema.png)
+![Database Schema](hhttps://github.com/colelevy08/EchoEcho/issues/5#issue-1794834916)
 
 ## Wireframe:
 [Wireframe](https://www.figma.com/file/MbtQ6o1dWaNJ3pyvm4vRBV/EchoEcho?type=whiteboard&node-id=0%3A1&t=4OYjARU12DI)
@@ -31,38 +31,81 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 
 ## API Routes:
 
-| Route              | Method | Body         | Response                 | Explanation                                        |
-|--------------------|--------|--------------|--------------------------|----------------------------------------------------|
-| /signup            | POST   | form or json |  [{user schema}], 200    | Creates a new user when  they signup.              |
-| /login             | POST   | form or json | {User schema}, 200       | Logs user into app.                                |
-| /users             | GET    | none         | [{User schema}], 200     | Displays all users + "mom life" and "interests" tables |
-| /users/id          | PATCH  | form or json | {User schema},200        | Allows user to update/change their  information    |
-|                    | DELETE | none         | {}, 204                  | Allows user to delete their profile                |
-| /friendship_status | GET    | none         | [{friendship_status schema}], 200 | Displays friends with 'matched' status             |
-|                    | PATCH  | form or json | {friendship_status schema} | Changes friends status from 'pending' to 'matched' |
-|                    | DELETE | none         |                          | Deletes friend                                     |
-| /friendship        | POST   | form or json | {friendship_status schema} | Connection to new user                           |
-| /messages/id       | GET    | none         | [{Messages schema}], 200 | Retrieves all of user's messages                   |
-|                    | DELETE | none         | {}, 204                  |                                                    |
-| /messages/user     | GET    | none         | [{Messages schema}], 200 | Retrieves messages for specific recipient user     |
-| /messages          | POST   | form or json | {Messages schema}, 200   | New message is created                             |
+| Route                     | Method | Body         | Response                 | Explanation                                                     |
+|---------------------------|--------|--------------|--------------------------|-----------------------------------------------------------------|
+| /auth/signup              | POST   | form or json | {user schema}, 201       | Creates a new user when they signup.                            |
+| /auth/login               | POST   | form or json | {User schema}, 200       | Logs user into app.                                             |
+| /users                    | GET    | none         | [{User schema}], 200     | Retrieves all users.                                            |
+| /users/id                 | GET    | none         | {User schema}, 200       | Retrieves a specific user's profile.                            |
+| /users/id                 | PATCH  | form or json | {User schema}, 200       | Allows user to update/change their information.                 |
+| /users/id                 | DELETE | none         | {}, 204                  | Allows user to delete their profile.                            |
+| /users/id/friends         | GET    | none         | [{Friendship schema}], 200| Retrieves user's friends.                                       |
+| /users/id/friends         | POST   | form or json | {Friendship schema}, 201 | Adds a friend to user's friend list.                            |
+| /users/id/friends/friend_id| DELETE| none         | {}, 204                  | Removes a friend from user's friend list.                       |
+| /users/id/messages        | GET    | none         | [{Message schema}], 200  | Retrieves all of user's messages.                               |
+| /users/id/messages        | POST   | form or json | {Message schema}, 201   | Send a new message from the user.                               |
+| /users/id/messages/message_id | DELETE | none      | {}, 204                  | Delete a specific message from the user.                        |
+| /marketplace              | GET    | none         | [{Product schema}], 200  | Retrieves all available products.                               |
+| /marketplace/id           | GET    | none         | {Product schema}, 200    | Retrieves a specific product's details.                         |
+| /marketplace              | POST   | form or json | {Product schema}, 201   | Adds a new product.                                             |
+| /marketplace/id           | PATCH  | form or json | {Product schema}, 200    | Updates a specific product's details.                           |
+| /marketplace/id           | DELETE | none         | {}, 204                  | Deletes a specific product.                                     |
+| /orders                   | GET    | none         | [{Order schema}], 200    | Retrieves all orders placed by the user.                        |
+| /orders/id                | GET    | none         | {Order schema}, 200      | Retrieves a specific order's details.                           |
+| /orders                   | POST   | form or json | {Order schema}, 201      | Creates a new order.                                            |
+| /orders/id                | PATCH  | form or json | {Order schema}, 200      | Updates a specific order's details.                             |
+| /orders/id                | DELETE | none         | {}, 204                  | Deletes a specific order.                                       |
+| /reviews                  | GET    | none         | [{Review schema}], 200   | Retrieves all reviews.                                          |
+| /reviews/id               | GET    | none         | {Review schema}, 200     | Retrieves a specific review.                                    |
+| /reviews                  | POST   | form or json | {Review schema}, 201     | Creates a new review.                                           |
+| /reviews/id               | PATCH  | form or json | {Review schema}, 200     | Updates a specific review.                                      |
+| /reviews/id               | DELETE | none         | {}, 204                  | Deletes a specific review.                                      |
+| /search                   | POST   | form or json | Various, 200             | Searches for users, products, orders, or reviews.               |
 
 ## Component Tree:
 
-![Component Tree](https://github.com/username/project/assets/component_tree.png)
+## Client-Side Routes:
 
-## Client-side Routes:
+| Route                     | Component       | Description                                                                                                             |
+|---------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------|
+| /                         | HomePage.js     | Landing page for users to signup or login.                                                                               |
+| /signup                   | SignupForm.js   | Contains form to signup and gain access to app.                                                                          |
+| /login                    | LoginForm.js    | Login page.                                                                                                              |
+| /home                     | Dashboard.js    | Dashboard for the user showing potential friends and product recommendations.                                           |
+| /users/id                 | UserProfile.js  | Displays a specific user's profile.                                                                                      |
+| /users/id/edit            | UserEditForm.js | Allows a user to update their profile.                                                                                   |
+| /users/id/friends         | FriendsList.js  | Shows a user's list of friends.                                                                                          |
+| /users/id/messages        | MessagesList.js | Shows all messages for the user.                                                                                         |
+| /users/id/messages/new    | MessageForm.js  | Allows a user to send a new message.                                                                                     |
+| /marketplace              | Marketplace.js  | Displays all products available in the marketplace.                                                                     |
+| /marketplace/new          | ProductForm.js  | Allows a user to create a new product listing.                                                                           |
+| /marketplace/id           | ProductDetails.js| Shows the details of a specific product.                                                                                 |
+| /marketplace/id/edit      | ProductEditForm.js| Allows a user to update a specific product listing.                                                                      |
+| /orders                   | UserOrders.js   | Shows all orders placed by the current user.                                                                             |
+| /orders/new               | OrderForm.js    | Allows a user to place a new order.                                                                                      |
+| /orders/id                | OrderDetails.js | Shows the details of a specific order placed by the current user.                                                        |
+| /reviews                  | ReviewsList.js  | Shows all reviews.                                                                                                       |
+| /reviews/new              | ReviewForm.js   | Allows a user to write a new review.                                                                                     |
+| /reviews/id               | ReviewDetails.js| Shows the details of a specific review.                                                                                   |
+| /reviews/id/edit          | ReviewEditForm.js| Allows a user to update a specific review.                                                                               |
+| /search                   | SearchForm.js   | Allows a user to search for users, products, orders, or reviews.                                                         |
+criteria.|
 
-| Route          | Component       | Description                                                                                                             |
-|----------------|-----------------|-------------------------------------------------------------------------------------------------------------------------|
-| /welcome       | WelcomePage.js  | Welcome page for users to signup or login                                                                               |
-| /signup        | SignupForm.js   | Contains form to signup and gain access to app                                                                          |
-| /login         | LoginForm.js    | Login page                                                                                                              |
-| /home          | Home.js         | Shows list of potential friend matches for user to view, filter                                                         |
-| /interested    | PendingList.js  | Shows list of users who are interested in being user's friend (User has not matched with them yet) - filtered by status |
-| /friends       | FriendsList.js  | Shows list of user's friends they have been matched with - filtered by status                                           |
-| /messages      | MessagesList.js | Shows list of all conversations user has with other users/friends                                                       |
-| /messages/user | Conversation.js | Shows conversation between user and another user                                                                        |
 
-## Trello Board
-![Trello Board](https://github.com/username/project/assets/trello_board.png)
+## Future Iterations:
+
+1. **Music Recognition Feature**: Shazam-like functionality that allows users to identify songs from playing vinyl records and add them to a wishlist, which can then be shared with friends.
+
+2. **In-app Virtual Turntable**: A feature that allows users to simulate playing a record, offering a visually appealing and interactive experience. 
+
+3. **Live Concert Streaming**: Provide live streaming capabilities for bands and DJs to connect with the EchoEcho community. 
+
+4. **Interactive Concert Map**: A feature to display live concerts and events in the user's area, incorporating an interactive map and calendar.
+
+5. **Curation of Personalized Playlists**: The AI would learn the music preferences of the users and generate personalized playlists for them.
+
+## License:
+This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) license.
+
+## Acknowledgements:
+I would like to thank all contributors and the whole EchoEcho community for their unwavering support and commitment.
