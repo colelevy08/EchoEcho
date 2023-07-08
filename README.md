@@ -104,8 +104,6 @@ criteria.|
 
 5. **Curation of Personalized Playlists**: The AI would learn the music preferences of the users and generate personalized playlists for them.
 
-## License:
-This project is licensed under the [MIT](https://choosealicense.com/licenses/mit/) license.
 
 ## Acknowledgements:
 I would like to thank all contributors and the whole EchoEcho community for their unwavering support and commitment.
