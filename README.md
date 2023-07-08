@@ -88,9 +88,7 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 | /reviews/new              | ReviewForm.js   | Allows a user to write a new review.                                                                                     |
 | /reviews/id               | ReviewDetails.js| Shows the details of a specific review.                                                                                   |
 | /reviews/id/edit          | ReviewEditForm.js| Allows a user to update a specific review.                                                                               |
-| /search                   | SearchForm.js   | Allows a user to search for users, products, orders, or reviews.                                                         |
-criteria.|
-
+| /search                   | SearchForm.js   | Allows a user to search for users, products, orders, or reviews. 
 
 ## Future Iterations:
 
