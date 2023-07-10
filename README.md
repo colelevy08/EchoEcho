@@ -25,9 +25,7 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 ![Database Schema](hhttps://github.com/colelevy08/EchoEcho/issues/5#issue-1794834916)
 
 ## Wireframe:
-[Wireframe](https://www.figma.com/file/MbtQ6o1dWaNJ3pyvm4vRBV/EchoEcho?type=whiteboard&node-id=0%3A1&t=4OYjARU12DI)
 
-![Wireframe](https://github.com/username/project/assets/wireframe.png)
 
 ## API Routes:
 
