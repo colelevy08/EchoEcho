@@ -36,3 +36,36 @@
     transform: rotate(360deg);
   }
 }
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+}
+
+a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+form {
+  margin-bottom: 1em;
+}
+
+form input[type="text"], form input[type="password"], form input[type="email"] {
+  margin-top: 0.5em;
+}
+
+form button, form input[type="submit"] {
+  margin-top: 1em;
+}
+
+.error {
+  color: red;
+}
