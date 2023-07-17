@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { getUser } from './api.js';  // Import the getUser function from API
 
 function UserDetail() {
-  const { userId } = useParams();
+  const { id } = useParams();  // Extract the user ID from the URL parameters
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://localhost:5555/users/${userId}`);
-        setUser(response.data);
+        const userData = await getUser(id);  // Fetch the user details from the API
+        setUser(userData);  // Set the user state
       } catch (error) {
         console.error('Error fetching user details:', error);
       }
     };
 
     fetchUser();
-  }, [userId]);
+  }, [id]);  // Depend on the id, so the effect reruns when the id changes
 
   if (!user) {
-    return <p>Loading...</p>;
+    return <p>Loading...</p>;  // Show a loading message while the user details are being fetched
   }
 
   return (
