@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { signUp } from './api.js';
 
 function SignupForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  let history = useHistory();
+  let history = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5555/auth/signup', {
-        username,
-        email,
-        password
-      });
+      const response = await signUp(username, email, password);
       console.log('User added:', response.data);
       // Redirect to the login page
       history.push('/login');
@@ -44,4 +40,3 @@ function SignupForm() {
 }
 
 export default SignupForm;
-

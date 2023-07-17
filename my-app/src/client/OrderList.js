@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getOrders } from './api.js';
 
 const OrderList = () => {
     const [orders, setOrders] = useState([]);
@@ -7,7 +7,7 @@ const OrderList = () => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get('/orders');
+                const response = await getOrders();
                 setOrders(response.data);
             } catch (error) {
                 console.error(error);

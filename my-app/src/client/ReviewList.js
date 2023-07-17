@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { getReviews } from './api.js';
 
 function ReviewList() {
   const [reviews, setReviews] = useState([]);
@@ -7,7 +7,7 @@ function ReviewList() {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await axios.get('http://localhost:5555/reviews');
+        const response = await getReviews();
         setReviews(response.data);
       } catch (error) {
         console.error('Error fetching reviews:', error);
