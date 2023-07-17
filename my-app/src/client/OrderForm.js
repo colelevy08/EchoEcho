@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { addOrder } from './api.js';
 
 const OrderForm = () => {
     const [productId, setProductId] = useState('');
-    let history = useHistory();
+    let history = useNavigate();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('/orders', { product_id: productId });
+            const response = await addOrder({ product_id: productId });
             console.log(response.data);
             // Redirect to the order list
             history.push('/orders');

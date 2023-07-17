@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { createReview } from './api.js';
 
 function ReviewForm() {
   const [productId, setProductId] = useState("");
   const [body, setBody] = useState("");
   const [rating, setRating] = useState("");
-  let history = useHistory();
+  let history = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5555/reviews', {
+      const response = await createReview({
         product_id: productId,
         body,
         rating

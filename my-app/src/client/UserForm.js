@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { signUp } from './api.js';  // Change this line
 
 function UserForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  let history = useHistory();
+  const [password, setPassword] = useState("");  // Add this line
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await axios.post('http://localhost:5555/users', {
-        username,
-        email
-      });
+      const response = await signUp(username, email, password);  // Change this line
       console.log('User added:', response.data);
-      // Redirect to the user list
-      history.push('/users');
+      navigate('/users');
     } catch (error) {
       console.error('Error adding user:', error);
     }
@@ -32,10 +29,13 @@ function UserForm() {
         Email:
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
       </label>
+      <label>
+        Password:  // Add this block
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+      </label>
       <input type="submit" value="Add User" />
     </form>
   );
 }
 
 export default UserForm;
-
