@@ -32,8 +32,8 @@ function App() {
     const fetchUser = async () => {
       setLoading(true);
       try {
-        const userData = await getUsers();
-        setUser(userData);
+        // const userData = await getUsers();
+        setUser({});
         setError(null);
       } catch (error) {
         setError('Error fetching current user');
