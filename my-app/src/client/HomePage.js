@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+// The HomePage component is the landing page of the application
+// It includes a welcome message and links to the login, signup, and dashboard pages
 function HomePage() {
   return (
     <div>

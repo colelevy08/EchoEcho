@@ -1,43 +1,52 @@
-from models import db, User, Product, marketplace
+from models import db, User, Product, Order, Review
 from app import create_app
+import random
+import string
 
 app = create_app()  # Create Flask app
 
 # Start a new application context
 with app.app_context():
-
     # Create users
-    if User.query.filter_by(username='user1').first() is None:
-        user1 = User(username='user1', email='user1@example.com')
-        user1.set_password('password')  # Set user password
-        db.session.add(user1)
-
-    if User.query.filter_by(username='user2').first() is None:
-        user2 = User(username='user2', email='user2@example.com')
-        user2.set_password('password')  # Set user password
-        db.session.add(user2)
+    for i in range(10):  # Create 10 users
+        username = f'user{i}'
+        email = f'user{i}@example.com'
+        user = User.query.filter_by(username=username).first()
+        if user is None:
+            user = User(username=username, email=email)
+            user.set_password('password')  # Set user password
+            db.session.add(user)  # Add the user to the database session
 
     db.session.commit()  # Commit the session to assign IDs
 
     # Create products
-    product1 = Product(name='product1', description='description1', price=9.99)
-    product2 = Product(name='product2', description='description2', price=19.99)
+    for i in range(10):  # Create 10 products
+        name = f'product{i}'
+        description = 'description' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))  # Random description
+        price = random.uniform(1.0, 100.0)  # Random price between 1.0 and 100.0
+        product = Product(name=name, description=description, price=price)
 
-    # Add products to the session
-    db.session.add(product1)
-    db.session.add(product2)
+        # Add product to the session
+        db.session.add(product)
 
     db.session.commit()  # Commit the session to assign IDs
 
-    # Assuming users were successfully added, create associations between users and products
-    user1 = User.query.filter_by(username='user1').first()
-    user2 = User.query.filter_by(username='user2').first()
+    # Assuming users and products were successfully added, create associations between users and products
+    users = User.query.all()
+    products = Product.query.all()
 
-    if user1 is not None and product1 is not None:
-        db.session.execute(marketplace.insert().values(user_id=user1.id, product_id=product1.id))
+    for user in users:
+        for product in products:
+            # Each user orders each product once
+            order = Order(user_id=user.id, product_id=product.id)
+            db.session.add(order)
 
-    if user2 is not None and product2 is not None:
-        db.session.execute(marketplace.insert().values(user_id=user2.id, product_id=product2.id))
+            # Each user reviews each product once
+            review = Review(user_id=user.id, product_id=product.id, body='Great product!', rating=random.randint(1, 5))
+            db.session.add(review)
+
+            # Each user likes each product
+            product.liked_by.append(user)
 
     # Commit the session again to save the associations
     db.session.commit()

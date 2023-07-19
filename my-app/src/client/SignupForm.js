@@ -3,17 +3,21 @@ import { useNavigate } from 'react-router-dom';
 import { signUp } from './api.js';
 
 function SignupForm() {
+  // Local states for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  
+  // useNavigate hook for redirecting to other routes
   let history = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Call the signUp API method to create a new user
       const response = await signUp(username, email, password);
       console.log('User added:', response.data);
-      // Redirect to the login page
+      // After successfully creating the user, redirect to the login page
       history.push('/login');
     } catch (error) {
       console.error('Error adding user:', error);

@@ -19,6 +19,8 @@ import UserForm from './client/UserForm.js';
 import UserList from './client/UserList.js';
 
 function App() {
+  // Using React hooks to manage the state
+  // These states hold the user information and the loading status
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
@@ -27,11 +29,12 @@ function App() {
     setUser(null); // Clear the user upon logout
   };
 
-  // Get user data when the app loads
+  // The useEffect hook runs when the component mounts and fetches the user data
   useEffect(() => {
     const fetchUser = async () => {
       setLoading(true);
       try {
+        // Uncomment this line and make sure the function getUsers exists and is imported from './api'
         // const userData = await getUsers();
         setUser({});
         setError(null);
@@ -44,16 +47,19 @@ function App() {
     };
 
     fetchUser();
-  }, []);
+  }, []); // Empty dependency array means this effect runs once on component mount
 
+  // Show a loading message if the data is still being fetched
   if (loading) {
     return <p>Loading...</p>;
   }
 
+  // If an error occurred while fetching the data, display the error message
   if (error) {
     return <p>Error: {error}</p>;
   }
 
+  // Render the routes for the application
   return (
     <Router>
       <Routes>

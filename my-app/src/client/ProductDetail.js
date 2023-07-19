@@ -1,51 +1,35 @@
 import React, { useEffect, useState } from 'react';
-import { getProduct, getCurrentUser, likeProduct, unlikeProduct } from './api.js';
+import { useParams } from 'react-router-dom';
+import { getProduct } from './api.js';
 
-const ProductDetail = ({ match }) => {
-    const [product, setProduct] = useState(null);
-    const [isLiked, setIsLiked] = useState(false);
-    const [currentUser, setCurrentUser] = useState(null);
-    const productId = match.params.id;
+function ProductDetail() {
+  const { id } = useParams();  // Extract the product ID from the URL parameters
+  const [product, setProduct] = useState(null);
 
-    useEffect(() => {
-        const fetchProductAndUser = async () => {
-            try {
-                const response = await getProduct(productId);
-                setProduct(response.data);
-                const user = await getCurrentUser();
-                setCurrentUser(user);
-                setIsLiked(response.data.liked_by.includes(user.id));
-            } catch (error) {
-                console.error(error);
-            }
-        };
-        fetchProductAndUser();
-    }, [productId]);
-
-    const handleLikeClick = async () => {
-        try {
-            if (isLiked) {
-                await unlikeProduct(product.id);
-                setIsLiked(false);
-            } else {
-                await likeProduct(product.id);
-                setIsLiked(true);
-            }
-        } catch (error) {
-            console.error(error);
-        }
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const productData = await getProduct(id);  // Fetch the product details from the API
+        setProduct(productData);  // Set the product state
+      } catch (error) {
+        console.error('Error fetching product details:', error);
+      }
     };
 
-    return product ? (
-        <div>
-            <h2>{product.name}</h2>
-            <p>Description: {product.description}</p>
-            <p>Price: ${product.price}</p>
-            <button onClick={handleLikeClick}>{isLiked ? 'Unlike' : 'Like'}</button>
-        </div>
-    ) : (
-        <p>Loading product failed. Please try again.</p>
-    );
-};
+    fetchProduct();
+  }, [id]);  // Depend on the id, so the effect reruns when the id changes
+
+  if (!product) {
+    return <p>Loading...</p>;  // Show a loading message while the product details are being fetched
+  }
+
+  return (
+    <div>
+      <h1>{product.name}</h1>
+      <p>Description: {product.description}</p>
+      <p>Price: ${product.price}</p>
+    </div>
+  );
+}
 
 export default ProductDetail;

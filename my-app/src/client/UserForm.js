@@ -1,19 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signUp } from './api.js';  // Change this line
+import { signUp } from './api.js';  // Import the signUp function from the API
 
 function UserForm() {
+  // Local states for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");  // Add this line
-  const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  
+  // useNavigate hook for redirecting to other routes
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await signUp(username, email, password);  // Change this line
+      // Call the signUp API method to create a new user
+      const response = await signUp(username, email, password);
       console.log('User added:', response.data);
-      navigate('/users');
+      // After successfully creating the user, redirect to the login page
+      navigate('/login');
     } catch (error) {
       console.error('Error adding user:', error);
     }
@@ -30,7 +35,7 @@ function UserForm() {
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
       </label>
       <label>
-        Password:  // Add this block
+        Password:
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
       </label>
       <input type="submit" value="Add User" />
