@@ -5,16 +5,22 @@ import { getProduct, likeProduct } from './api';  // Make sure to import the lik
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [error, setError] = useState(null);  // Error state to handle any errors
 
   // Function to handle when the like button is clicked
-  const handleLike = async () => {
-    try {
-      await likeProduct(id);  // Call the likeProduct function from the API
-      console.log('Product liked');
-    } catch (error) {
-      console.error('Error liking product:', error);
+// Function to handle when the like button is clicked
+const handleLike = async () => {
+  try {
+    await likeProduct(id);  // Call the likeProduct function from the API
+    console.log('Product liked');
+  } catch (error) {
+    console.error('Error liking product:', error);
+    if (error.response && error.response.status === 401) {
+      alert('You need to be logged in to like a product.');
     }
-  };
+  }
+};
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -23,6 +29,7 @@ function ProductDetail() {
         setProduct(productData);
       } catch (error) {
         console.error('Error fetching product details:', error);
+        setError('Error fetching product details');  // Set the error state
       }
     };
 
@@ -31,6 +38,10 @@ function ProductDetail() {
 
   if (!product) {
     return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>{error}</p>;  // Display the error message
   }
 
   return (

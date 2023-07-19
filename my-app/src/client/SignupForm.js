@@ -17,12 +17,17 @@ function SignupForm() {
       setError("Username must be at least 3 characters long.");
       return;
     }
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
     try {
       const response = await signUp(username, email, password);
       console.log('User added:', response);
       navigate('/login');
     } catch (error) {
       console.error('Error adding user:', error);
+      setError(error.message);  // Show error message to user
     }
   };
 

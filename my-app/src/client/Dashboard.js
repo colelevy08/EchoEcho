@@ -10,6 +10,7 @@ function Dashboard() {
         <li><Link className="dashboard-link" to="/reviews">View Reviews</Link></li>
         <li><Link className="dashboard-link" to="/users">View Users</Link></li>
         <li><Link className="dashboard-link" to="/orders">View Orders</Link></li>
+        <li><Link className="dashboard-link" to="/MyLikes">My Likes</Link></li>
       </ul>
     </div>
   );
