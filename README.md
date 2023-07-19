@@ -3,26 +3,33 @@
 Welcome to EchoEcho, the ultimate social media platform engineered exclusively for the vibrant community of music lovers and vinyl record connoisseurs. EchoEcho harmoniously combines the engaging aspects of social media platforms such as Instagram or TikTok, with the market dynamics of eBay or Depop, focusing solely on music-centric interactions and transactions. It's a digital hub where users can flaunt their cherished record collections, musician equipment, exhilarating live concert experiences, and tribute band performances, as well as trade, buy, and sell records, music gear, and even live event tickets. Become part of the EchoEcho community and forge connections with fellow music aficionados, record collectors, and music gurus worldwide.
 
 ## What's EchoEcho for?:
+- Buy, sell, and trade records and music equipment
+- Share your music, music equipment, or music experiences with like minded music gurus
 - Find potential music-friends in your area
 - Interact with user profiles to find out if you are a music-match!
-- Message new friends
+- Message new friends and people selling music equipment
 
 ## Features
-- Upon opening app, user will be greeted with welcome screen where they can either Signup or Login.
-- User can customize profile with their own interests and update their profile later
-- User can search through profiles of other users and select either 'thumbs up' or 'thumbs down'
-- User can view list of potential friends who have positively interacted with user's profile but have not 'matched'
-- User can view list of 'matches' (friend's list) as well as delete friend. 
-- User can send messages to friends.
+- Upon opening the app, the user will be greeted with a welcome screen where they can either sign up or log in.
+- Users can customize their profiles with their own interests and update their profiles later.
+- Users can view a list of potential friends who have positively interacted with their profile but have not 'matched'.
+- Users can view a list of 'matches' (friends list) and delete friends.
+- Users can send messages to their friends.
+- Leave a review on a certain album, piece of equipment, or live performance
+- Users can "create a marketplace" and sell there music equipment, or buy from others marketplaces
+- Search for specific users, ablums, and music equipment.
+
+## Strech Goals
+- Users can buy and sell live event tickets
+- Videos shared from the same venue on the same date are automatically grouped with a # for easy playback of your favorite musicians live performances
+
 
 ## Tech Stack:
 
 [![My Skills](https://skillicons.dev/icons?i=js,py,flask,react,vite)](https://skillicons.dev)
 
 ## Schema:
-[Database Schema](https://dbdiagram.io/d/64a9138c02bd1c4a5eb655f4)
-
-![Database Schema](hhttps://github.com/colelevy08/EchoEcho/issues/5#issue-1794834916)
+![Database Schema](https://github.com/colelevy08/EchoEcho/issues/5#issue-1794834916)
 
 ## Wireframe:
 
@@ -31,34 +38,34 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 
 | Route                     | Method | Body         | Response                 | Explanation                                                     |
 |---------------------------|--------|--------------|--------------------------|-----------------------------------------------------------------|
-| /auth/signup              | POST   | form or json | {user schema}, 201       | Creates a new user when they signup.                            |
-| /auth/login               | POST   | form or json | {User schema}, 200       | Logs user into app.                                             |
-| /users                    | GET    | none         | [{User schema}], 200     | Retrieves all users.                                            |
-| /users/id                 | GET    | none         | {User schema}, 200       | Retrieves a specific user's profile.                            |
-| /users/id                 | PATCH  | form or json | {User schema}, 200       | Allows user to update/change their information.                 |
-| /users/id                 | DELETE | none         | {}, 204                  | Allows user to delete their profile.                            |
-| /users/id/friends         | GET    | none         | [{Friendship schema}], 200| Retrieves user's friends.                                       |
-| /users/id/friends         | POST   | form or json | {Friendship schema}, 201 | Adds a friend to user's friend list.                            |
-| /users/id/friends/friend_id| DELETE| none         | {}, 204                  | Removes a friend from user's friend list.                       |
-| /users/id/messages        | GET    | none         | [{Message schema}], 200  | Retrieves all of user's messages.                               |
-| /users/id/messages        | POST   | form or json | {Message schema}, 201   | Send a new message from the user.                               |
-| /users/id/messages/message_id | DELETE | none      | {}, 204                  | Delete a specific message from the user.                        |
-| /marketplace              | GET    | none         | [{Product schema}], 200  | Retrieves all available products.                               |
-| /marketplace/id           | GET    | none         | {Product schema}, 200    | Retrieves a specific product's details.                         |
-| /marketplace              | POST   | form or json | {Product schema}, 201   | Adds a new product.                                             |
-| /marketplace/id           | PATCH  | form or json | {Product schema}, 200    | Updates a specific product's details.                           |
-| /marketplace/id           | DELETE | none         | {}, 204                  | Deletes a specific product.                                     |
-| /orders                   | GET    | none         | [{Order schema}], 200    | Retrieves all orders placed by the user.                        |
-| /orders/id                | GET    | none         | {Order schema}, 200      | Retrieves a specific order's details.                           |
-| /orders                   | POST   | form or json | {Order schema}, 201      | Creates a new order.                                            |
-| /orders/id                | PATCH  | form or json | {Order schema}, 200      | Updates a specific order's details.                             |
-| /orders/id                | DELETE | none         | {}, 204                  | Deletes a specific order.                                       |
-| /reviews                  | GET    | none         | [{Review schema}], 200   | Retrieves all reviews.                                          |
-| /reviews/id               | GET    | none         | {Review schema}, 200     | Retrieves a specific review.                                    |
-| /reviews                  | POST   | form or json | {Review schema}, 201     | Creates a new review.                                           |
-| /reviews/id               | PATCH  | form or json | {Review schema}, 200     | Updates a specific review.                                      |
-| /reviews/id               | DELETE | none         | {}, 204                  | Deletes a specific review.                                      |
-| /search                   | POST   | form or json | Various, 200             | Searches for users, products, orders, or reviews.               |
+| /users                    | GET    | None         | [{User schema}], 200     | Retrieves all users.                                            |
+| /users/{id}               | GET    | None         | {User schema}, 200       | Retrieves a specific user's profile.                            |
+| /users/current-user       | GET    | None         | {User schema}, 200       | Retrieves the current logged-in user's profile.                 |
+| /signup                   | POST   | {username, email, password} as JSON | {User schema}, 201 | Creates a new user when they sign up.                          |
+| /login                    | POST   | {email, password} as JSON       | {User schema}, 200       | Logs the user into the app.                                     |
+| /logout                   | GET    | None         | {message: 'Logged out'}, 200 | Logs the user out of the app.                                  |
+| /users/{id}               | PATCH  | {username, email, password} as JSON | {User schema}, 200   | Updates the current user's profile.                             |
+| /products                 | GET    | None         | [{Product schema}], 200  | Retrieves all products.                                         |
+| /products/{id}            | GET    | None         | {Product schema}, 200    | Retrieves a specific product's details.                         |
+| /products                 | POST   | {name, description, price} as JSON | {Product schema}, 201 | Adds a new product.                                             |
+| /products/{id}/like       | POST   | None         | {message: 'Product liked'}, 200 | Likes a specific product.                                     |
+| /products/{id}/unlike     | POST   | None         | {message: 'Product unliked'}, 200 | Unlikes a specific product.                                   |
+| /users/{id}/likes         | GET    | None         | [{Product schema}], 200  | Retrieves all products liked by a specific user.                |
+| /products/{id}/likes      | GET    | None         | [{User schema}], 200     | Retrieves all users who liked a specific product.               |
+| /products/{id}/reviews    | GET    | None         | [{Review schema}], 200   | Retrieves all reviews for a specific product.                   |
+| /marketplace              | GET    | None         | [{Product schema}], 200  | Retrieves all products in the marketplace.                      |
+| /reviews                  | GET    | None         | [{Review schema}], 200   | Retrieves all reviews.                                          |
+| /orders                   | GET    | None         | [{Order schema}], 200    | Retrieves all orders.                                            |
+| /marketplace/{id}         | GET    | None         | {Product schema}, 200    | Retrieves a specific product's details.                         |
+| /marketplace/{id}         | PATCH  | {name, description, price} as JSON | {Product schema}, 200   | Updates a specific product's details.                           |
+| /marketplace/{id}         | DELETE | None         | {}, 204                  | Deletes a specific product.                                     |
+| /orders/{id}              | GET    | None         | {Order schema}, 200      | Retrieves a specific order's details.                           |
+| /orders                   | POST   | {product_id, quantity} as JSON | {Order schema}, 201   | Creates a new order.                                            |
+| /reviews                  | POST   | {user_id, product_id, body, rating} as JSON | {Review schema}, 201 | Creates a new review.                                    |
+| /reviews/{id}             | GET    | None         | {Review schema}, 200     | Retrieves a specific review.                                    |
+| /reviews/{id}             | PATCH  | {body, rating} as JSON   | {Review schema}, 200     | Updates a specific review.                                      |
+| /reviews/{id}             | DELETE | None         | {}, 204                  | Deletes a specific review.                                      |
+| /search                   | POST   | {query} as JSON | Various, 200             | Searches for users, products, orders, or reviews.               |
 
 ## Component Tree:
 
@@ -66,40 +73,25 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 
 | Route                     | Component       | Description                                                                                                             |
 |---------------------------|-----------------|-------------------------------------------------------------------------------------------------------------------------|
-| /                         | HomePage.js     | Landing page for users to signup or login.                                                                               |
-| /signup                   | SignupForm.js   | Contains form to signup and gain access to app.                                                                          |
-| /login                    | LoginForm.js    | Login page.                                                                                                              |
-| /home                     | Dashboard.js    | Dashboard for the user showing potential friends and product recommendations.                                           |
-| /users/id                 | UserProfile.js  | Displays a specific user's profile.                                                                                      |
-| /users/id/edit            | UserEditForm.js | Allows a user to update their profile.                                                                                   |
-| /users/id/friends         | FriendsList.js  | Shows a user's list of friends.                                                                                          |
-| /users/id/messages        | MessagesList.js | Shows all messages for the user.                                                                                         |
-| /users/id/messages/new    | MessageForm.js  | Allows a user to send a new message.                                                                                     |
-| /marketplace              | Marketplace.js  | Displays all products available in the marketplace.                                                                     |
-| /marketplace/new          | ProductForm.js  | Allows a user to create a new product listing.                                                                           |
-| /marketplace/id           | ProductDetails.js| Shows the details of a specific product.                                                                                 |
-| /marketplace/id/edit      | ProductEditForm.js| Allows a user to update a specific product listing.                                                                      |
-| /orders                   | UserOrders.js   | Shows all orders placed by the current user.                                                                             |
-| /orders/new               | OrderForm.js    | Allows a user to place a new order.                                                                                      |
-| /orders/id                | OrderDetails.js | Shows the details of a specific order placed by the current user.                                                        |
-| /reviews                  | ReviewsList.js  | Shows all reviews.                                                                                                       |
-| /reviews/new              | ReviewForm.js   | Allows a user to write a new review.                                                                                     |
-| /reviews/id               | ReviewDetails.js| Shows the details of a specific review.                                                                                   |
-| /reviews/id/edit          | ReviewEditForm.js| Allows a user to update a specific review.                                                                               |
-| /search                   | SearchForm.js   | Allows a user to search for users, products, orders, or reviews. 
+| /                         | HomePage.js     | Landing page for users to sign up or log in.                                                                             |
+| /dashboard                | Dashboard.js    | User dashboard displaying user information and navigation to other features.                                              |
+| /login                    | LoginForm.js    | Form for user login.                                                                                                    |
+| /signup                   | SignupForm.js   | Form for user signup.                                                                                                   |
+| /products                 | ProductList.js  | List of all products in the marketplace.                                                                                |
+| /products/new             | ProductForm.js  | Form for creating a new product.                                                                                        |
+| /products/:id             | ProductDetail.js| Detailed view of a specific product.                                                                                    |
+| /orders                   | OrderList.js    | List of all orders made by the user.                                                                                     |
+| /orders/new               | OrderForm.js    | Form for creating a new order.                                                                                           |
+| /reviews                  | ReviewList.js   | Shows a list of all reviews in the app.                                                                                 |
+| /reviews/new              | ReviewForm.js   | Form for creating a new review.                                                                                          |
+| /users                    | UserList.js     | Shows a list of all users in the app.                                                                                    |
+| /users/new                | UserForm.js     | Form for creating a new user profile.                                                                                    |
+| /users/:id                | UserDetail.js   | Shows the details of a specific user profile.                                                                            |
 
-## Future Iterations:
+## How to run the app locally:
 
-1. **Music Recognition Feature**: Shazam-like functionality that allows users to identify songs from playing vinyl records and add them to a wishlist, which can then be shared with friends.
+### Prerequisites:
 
-2. **In-app Virtual Turntable**: A feature that allows users to simulate playing a record, offering a visually appealing and interactive experience. 
+- Python 3.x
+- Node.js
 
-3. **Live Concert Streaming**: Provide live streaming capabilities for bands and DJs to connect with the EchoEcho community. 
-
-4. **Interactive Concert Map**: A feature to display live concerts and events in the user's area, incorporating an interactive map and calendar.
-
-5. **Curation of Personalized Playlists**: The AI would learn the music preferences of the users and generate personalized playlists for them.
-
-
-## Acknowledgements:
-I would like to thank all contributors and the whole EchoEcho community for their unwavering support and commitment.

@@ -9,11 +9,10 @@ async function handleResponse(response) {
         const data = await response.json();
         return data;
     } else {
-        const message = `An error has occurred: ${response.status}`;
+        const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
     }
 }
-
 // Function to get all users
 // It fetches the users from the API and then uses the handleResponse function to return the data or throw an error
 export async function getUsers() {
@@ -41,6 +40,7 @@ export async function signUp(username, email, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
+    // If response is not ok, throw an error with the status code and the error message from the server
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
@@ -48,12 +48,18 @@ export async function signUp(username, email, password) {
     return response.json();
 }
 
+
 export async function login(email, password) {
     const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
+    // If response is not ok, throw an error with the status code and the error message from the server
+    if (!response.ok) {
+        const message = `An error has occurred: ${response.status} ${await response.text()}`;
+        throw new Error(message);
+    }
     return handleResponse(response);
 }
 
@@ -190,3 +196,10 @@ export async function createProduct(productData) {
     });
     return handleResponse(response);
 }
+
+// Function to get all liked products for the current user
+export async function getProductLikes() {
+    const response = await fetch(`${API_URL}/products/likes`); // Update this with your actual endpoint
+    return handleResponse(response);
+}
+

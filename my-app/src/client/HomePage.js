@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { UserContext } from './UserContext.js';  // Import UserContext
 
-// The HomePage component is the landing page of the application
-// It includes a welcome message and links to the login, signup, and dashboard pages
 function HomePage() {
+  const { user, setUser } = useContext(UserContext);  // Use UserContext
+
+  const logout = async () => {
+    try {
+      await logout();  // Call the logout function from the API
+      setUser(null);  // Clear the user state
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+  };
+
   return (
     <div>
       <h1>Welcome to the EchoEcho!</h1>
-      <Link to="/login">Login</Link>
-      <Link to="/signup">Signup</Link>
+      {user ? (
+        <>
+          <p>Welcome, {user.username}!</p>
+          <button onClick={logout}>Logout</button>
+        </>
+      ) : (
+        <>
+          <Link to="/login">Login</Link>
+          <Link to="/signup">Signup</Link>
+        </>
+      )}
       <Link to="/Dashboard">Dashboard</Link>
+      <Link to="/MyLikes">My Likes</Link>
+
     </div>
   );
 }

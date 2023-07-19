@@ -39,16 +39,16 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.username}>'
 
-    def is_liking(self, product):
-        return self.liked_products.filter(likes.c.product_id == product.id).count() > 0
+def is_liking(self, product):
+    return self.likes.filter(likes.c.product_id == product.id).count() > 0
 
-    def like_product(self, product):
-        if not self.is_liking(product):
-            self.liked_products.append(product)
+def like_product(self, product):
+    if not self.is_liking(product):
+        self.likes.append(product)
 
-    def unlike_product(self, product):
-        if self.is_liking(product):
-            self.liked_products.remove(product)
+def unlike_product(self, product):
+    if self.is_liking(product):
+        self.likes.remove(product)
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
