@@ -3,219 +3,231 @@ from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.exceptions import BadRequest
 from models import User, Product, Order, Review, db
 from flask_cors import CORS
+from sqlalchemy import exc
 
-main_routes = Blueprint('main', __name__)  # Create a Blueprint for the routes
+main_routes = Blueprint('main', __name__)
 
-# Users
 @main_routes.route('/users', methods=['GET'])
 def get_users():
-    users = User.query.all()  # Query all users
-    return jsonify([user.to_dict() for user in users]), 200  # Return a list of all users as JSON
-
-@main_routes.route('/users/current-user', methods=['GET'])
-def get_current_user():
-    if current_user.is_authenticated:  # If the current user is authenticated
-        return jsonify(current_user.to_dict()), 200  # Return the current user as JSON
-    else:
-        return jsonify({'error': 'No user logged in'}), 401  # Return an error message as JSON
-
-@main_routes.route('/signup', methods=['POST'])
-def signup():
-    data = request.get_json()  # Get the JSON data from the request
-    username = data.get('username')  # Get the 'username' field from the JSON data
-    email = data.get('email')  # Get the 'email' field from the JSON data
-    password = data.get('password')  # Get the 'password' field from the JSON data
-    
-    # Check if a user with the given username already exists
-    existing_user = User.query.filter_by(username=username).first()
-    if existing_user:
-        return jsonify({'error': 'Username already exists'}), 400  # Return an error message as JSON
-
-    if username and email and password:  # If 'username', 'email', and 'password' are all not None
-        user = User(username=username, email=email)  # Create a new User instance
-        user.set_password(password)  # Set the user's password
-        db.session.add(user)  # Add the user to the database session
-        db.session.commit()  # Commit the changes to the database
-        login_user(user)  # Log the user in
-        return jsonify(user.to_dict()), 201  # Return the new user as JSON
-    else:
-        raise BadRequest('Missing username, email, or password')  # Raise a BadRequest exception if any field is missing
-
-
-@main_routes.route('/login', methods=['POST'])
-def login():
-    data = request.get_json()  # Get the JSON data from the request
-    user = User.query.filter_by(email=data['email']).first()  # Query the user by 'username'
-    if user is None or not user.check_password(data['password']):  # If the user does not exist or the password is incorrect
-        return jsonify({'error': 'Invalid username or password'}), 400  # Return an error message as JSON
-    login_user(user)  # Log the user in
-    return jsonify(user.to_dict()), 200  # Return the logged in user as JSON
-
-@main_routes.route('/logout', methods=['GET'])
-@login_required  # Require the user to be logged in
-def logout():
-    logout_user()  # Log the user out
-    return jsonify({'message': 'Logged out'}), 200  # Return a success message as JSON
+    users = User.query.all()
+    return jsonify([user.to_dict() for user in users]), 200
 
 @main_routes.route('/users/<int:id>', methods=['GET'])
 def get_user(id):
-    user = User.query.get(int(id))  # Query the user by ID
-    if user:  # If the user exists
-        return jsonify(user.to_dict())  # Return the user as JSON
-    return jsonify({"error": "User not found"}), 404  # Return an error message as JSON
+    user = User.query.get(int(id))
+    if user:
+        return jsonify(user.to_dict())
+    return jsonify({"error": "User not found"}), 404
+
+
+@main_routes.route('/users/current-user', methods=['GET'])
+def get_current_user():
+    if current_user.is_authenticated:
+        return jsonify(current_user.to_dict()), 200
+    else:
+        return jsonify({'error': 'No user logged in'}), 401
+
+
+@main_routes.route('/signup', methods=['POST'])
+def signup():
+    if not request.is_json:
+        return jsonify({"error": "Missing JSON in request"}), 400
+
+    data = request.get_json()
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+
+    if not username or len(username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters"}), 400
+    if not email or "@" not in email:
+        return jsonify({"error": "Invalid email address"}), 400
+    if not password or len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters"}), 400
+
+    existing_user = User.query.filter_by(username=username).first()
+    if existing_user:
+        return jsonify({'error': 'Username already exists'}), 400
+
+    user = User(username=username, email=email)
+    user.set_password(password)
+    db.session.add(user)
+    try:
+        db.session.commit()
+    except exc.IntegrityError:
+        db.session.rollback()
+        return jsonify({'error': 'Email already exists'}), 400
+
+    login_user(user)
+    return jsonify(user.to_dict()), 201
+
+@main_routes.route('/login', methods=['POST'])
+def login():
+    if not request.is_json:
+        return jsonify({"error": "Missing JSON in request"}), 400
+
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or "@" not in email:
+        return jsonify({"error": "Invalid email address"}), 400
+    if not password:
+        return jsonify({"error": "Missing password"}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if user is None or not user.check_password(password):
+        return jsonify({'error': 'Invalid email or password'}), 401
+    login_user(user)
+    return jsonify(user.to_dict()), 200
+
+@main_routes.route('/logout', methods=['GET'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'Logged out'}), 200
+
 
 @main_routes.route('/users/<int:id>', methods=['PATCH'])
-@login_required  # Require the user to be logged in
+@login_required
 def update_user(id):
-    if current_user.id != id:  # If the current user is not the user being updated
-        return jsonify({'error': 'You can only update your own profile'}), 403  # Return an error message as JSON
-    data = request.get_json()  # Get the JSON data from the request
-    current_user.username = data.get('username', current_user.username)  # Update the username if provided
-    current_user.email = data.get('email', current_user.email)  # Update the email if provided
-    if 'password' in data:  # If a new password is provided
-        current_user.set_password(data['password'])  # Set the new password
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(current_user.to_dict()), 200  # Return the updated user as JSON
+    if current_user.id != id:
+        return jsonify({'error': 'You can only update your own profile'}), 403
+    if not request.is_json:
+        return jsonify({"error": "Missing JSON in request"}), 400
 
-# Marketplace
-@main_routes.route('/marketplace', methods=['GET'])
+    data = request.get_json()
+    username = data.get('username', current_user.username)
+    email = data.get('email', current_user.email)
+    password = data.get('password')
+
+    if username and len(username) < 3:
+        return jsonify({"error": "Username must be at least 3 characters"}), 400
+    if email and "@" not in email:
+        return jsonify({"error": "Invalid email address"}), 400
+    if password and len(password) < 8:
+        return jsonify({"error": "Password must be at least 8 characters"}), 400
+
+    current_user.username = username
+    current_user.email = email
+    if password:
+        current_user.set_password(password)
+    try:
+        db.session.commit()
+    except exc.IntegrityError:
+        db.session.rollback()
+        return jsonify({'error': 'Email already exists'}), 400
+
+    return jsonify(current_user.to_dict()), 200
+
+@main_routes.route('/products', methods=['GET'])
 def get_products():
-    products = Product.query.all()  # Query all products
-    return jsonify([product.to_dict() for product in products]), 200  # Return a list of all products as JSON
+    products = Product.query.all()
+    return jsonify([product.to_dict() for product in products]), 200
 
-@main_routes.route('/marketplace', methods=['POST'])
-@login_required  # Require the user to be logged in
-def add_product():
-    data = request.get_json()  # Get the JSON data from the request
-    product = Product(user_id=current_user.id, name=data['name'], description=data['description'], price=data['price'])  # Create a new Product instance
-    db.session.add(product)  # Add the product to the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(product.to_dict()), 201  # Return the new product as JSON
-
-@main_routes.route('/marketplace/<int:id>', methods=['GET'])
+@main_routes.route('/products/<int:id>', methods=['GET'])
 def get_product(id):
-    product = Product.query.get(id)  # Query the product by ID
-    if product is None:  # If the product does not exist
-        return jsonify({'error': 'Product not found'}), 404  # Return an error message as JSON
-    return jsonify(product.to_dict()), 200  # Return the product as JSON
+    product = Product.query.get(int(id))
+    if product:
+        return jsonify(product.to_dict())
+    return jsonify({"error": "Product not found"}), 404
 
-@main_routes.route('/marketplace/<int:id>', methods=['PATCH'])
-@login_required  # Require the user to be logged in
-def update_product(id):
-    product = Product.query.get(id)  # Query the product by ID
-    if product is None or product.user_id != current_user.id:  # If the product does not exist or the current user is not the product's user
-        return jsonify({'error': 'Product not found'}), 404  # Return an error message as JSON
-    data = request.get_json()  # Get the JSON data from the request
-    product.name = data.get('name', product.name)  # Update the product name if provided
-    product.description = data.get('description', product.description)  # Update the product description if provided
-    product.price = data.get('price', product.price)  # Update the product price if provided
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(product.to_dict()), 200  # Return the updated product as JSON
 
-@main_routes.route('/marketplace/<int:id>', methods=['DELETE'])
-@login_required  # Require the user to be logged in
-def delete_product(id):
-    product = Product.query.get(id)  # Query the product by ID
-    if product is None or product.user_id != current_user.id:  # If the product does not exist or the current user is not the product's user
-        return jsonify({'error': 'Product not found'}), 404  # Return an error message as JSON
-    db.session.delete(product)  # Delete the product from the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify({}), 204  # Return an empty response
+@main_routes.route('/products', methods=['POST'])
+@login_required
+def create_product():
+    if not request.is_json:
+        return jsonify({"error": "Missing JSON in request"}), 400
 
-# Orders
-@main_routes.route('/orders', methods=['GET'])
-@login_required  # Require the user to be logged in
-def get_orders():
-    orders = Order.query.filter_by(user_id=current_user.id)  # Query all orders by the current user
-    return jsonify([order.to_dict() for order in orders]), 200  # Return a list of all orders as JSON
+    data = request.get_json()
+    name = data.get('name')
+    description = data.get('description')
+    price = data.get('price')
 
-@main_routes.route('/orders', methods=['POST'])
-@login_required  # Require the user to be logged in
-def create_order():
-    data = request.get_json()  # Get the JSON data from the request
-    order = Order(user_id=current_user.id, product_id=data['product_id'], quantity=data['quantity'])  # Create a new Order instance
-    db.session.add(order)  # Add the order to the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(order.to_dict()), 201  # Return the new order as JSON
+    if not name or len(name) < 3:
+        return jsonify({"error": "Name must be at least 3 characters"}), 400
+    if not description or len(description) < 10:
+        return jsonify({"error": "Description must be at least 10 characters"}), 400
+    if not price or price < 0:
+        return jsonify({"error": "Price must be a positive number"}), 400
 
-@main_routes.route('/orders/<int:id>', methods=['PATCH'])
-@login_required  # Require the user to be logged in
-def update_order(id):
-    order = Order.query.get(id)  # Query the order by ID
-    if order is None or order.user_id != current_user.id:  # If the order does not exist or the current user is not the order's user
-        return jsonify({'error': 'Order not found'}), 404  # Return an error message as JSON
-    data = request.get_json()  # Get the JSON data from the request
-    order.product_id = data.get('product_id', order.product_id)  # Update the product ID if provided
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(order.to_dict()), 200  # Return the updated order as JSON
+    existing_product = Product.query.filter_by(name=name).first()
+    if existing_product:
+        return jsonify({'error': 'Product already exists'}), 400
 
-@main_routes.route('/orders/<int:id>', methods=['DELETE'])
-@login_required  # Require the user to be logged in
-def delete_order(id):
-    order = Order.query.get(id)  # Query the order by ID
-    if order is None or order.user_id != current_user.id:  # If the order does not exist or the current user is not the order's user
-        return jsonify({'error': 'Order not found'}), 404  # Return an error message as JSON
-    db.session.delete(order)  # Delete the order from the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify({}), 204  # Return an empty response
+    product = Product(name=name, description=description, price=price)
+    db.session.add(product)
+    db.session.commit()
+    return jsonify(product.to_dict()), 201
 
-# Reviews
+@main_routes.route('/products/<int:product_id>/like', methods=['POST'])
+@login_required
+def like_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    if current_user.is_liking(product):
+        return jsonify({'error': 'Product already liked'}), 400
+    current_user.like_product(product)
+    db.session.commit()
+    return jsonify({'message': 'Product liked'}), 200
+
+@main_routes.route('/products/<int:product_id>/unlike', methods=['POST'])
+@login_required
+def unlike_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    if not current_user.is_liking(product):
+        return jsonify({'error': 'Product not liked yet'}), 400
+    current_user.unlike_product(product)
+    db.session.commit()
+    return jsonify({'message': 'Product unliked'}), 200
+
+@main_routes.route('/users/<int:user_id>/likes', methods=['GET'])
+def get_user_likes(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    liked_products = user.likes
+    return jsonify([product.to_dict()
+        for product in liked_products]), 200
+
+@main_routes.route('/products/<int:product_id>/likes', methods=['GET'])
+def get_product_likes(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    likers = product.liked_by
+    return jsonify([user.to_dict() for user in likers]), 200
+
+@main_routes.route('/products/<int:product_id>/reviews', methods=['GET'])
+def get_product_reviews(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    reviews = Review.query.filter_by(product_id=product_id).all()
+    return jsonify([review.to_dict() for review in reviews]), 200
+
+@main_routes.route('/marketplace', methods=['GET'])
+def get_marketplace():
+    products = Product.query.all()
+    return jsonify([product.to_dict() for product in products]), 200
+
 @main_routes.route('/reviews', methods=['GET'])
 def get_reviews():
-    reviews = Review.query.all()  # Query all reviews
-    return jsonify([review.to_dict() for review in reviews]), 200  # Return a list of all reviews as JSON
+    reviews = Review.query.all()
+    return jsonify([review.to_dict() for review in reviews]), 200
 
-@main_routes.route('/reviews', methods=['POST'])
-@login_required  # Require the user to be logged in
-def create_review():
-    data = request.get_json()  # Get the JSON data from the request
-    review = Review(user_id=current_user.id, product_id=data['product_id'], body=data['body'], rating=data['rating'])  # Create a new Review instance
-    db.session.add(review)  # Add the review to the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(review.to_dict()), 201  # Return the new review as JSON
+@main_routes.route('/orders', methods=['GET'])
+def get_orders():
+    orders = Order.query.all()
+    return jsonify([order.to_dict() for order in orders]), 200
 
-@main_routes.route('/reviews/<int:id>', methods=['PATCH'])
-@login_required  # Require the user to be logged in
-def update_review(id):
-    review = Review.query.get(id)  # Query the review by ID
-    if review is None or review.user_id != current_user.id:  # If the review does not exist or the current user is not the review's user
-        return jsonify({'error': 'Review not found'}), 404  # Return an error message as JSON
-    data = request.get_json()  # Get the JSON data from the request
-    review.body = data.get('body', review.body)  # Update the review body if provided
-    review.rating = data.get('rating', review.rating)  # Update the review rating if provided
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(review.to_dict()), 200  # Return the updated review as JSON
-
-@main_routes.route('/reviews/<int:id>', methods=['DELETE'])
-@login_required  # Require the user to be logged in
-def delete_review(id):
-    review = Review.query.get(id)  # Query the review by ID
-    if review is None or review.user_id != current_user.id:  # If the review does not exist or the current user is not the review's user
-        return jsonify({'error': 'Review not found'}), 404  # Return an error message as JSON
-    db.session.delete(review)  # Delete the review from the database session
-    db.session.commit()  # Commit the changes to the database
-    return jsonify({}), 204  # Return an empty response
-
-@main_routes.route('/products/<int:id>/like', methods=['POST'])
-@login_required  # Require the user to be logged in
-def like_product(id):
-    product = Product.query.get(id)  # Query the product by ID
-    if product is None:  # If the product does not exist
-        return jsonify({'error': 'Product not found'}), 404  # Return an error message as JSON
-    if product in current_user.likes:  # If the current user already likes the product
-        return jsonify({'error': 'Product already liked'}), 400  # Return an error message as JSON
-    current_user.likes.append(product)  # Add the product to the current user's likes
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(product.to_dict()), 200  # Return the liked product as JSON
-
-@main_routes.route('/products/<int:id>/unlike', methods=['POST'])
-@login_required  # Require the user to be logged in
-def unlike_product(id):
-    product = Product.query.get(id)  # Query the product by ID
-    if product is None:  # If the product does not exist
-        return jsonify({'error': 'Product not found'}), 404  # Return an error message as JSON
-    if product not in current_user.likes:  # If the current user does not like the product
-        return jsonify({'error': 'Product not already liked'}), 400  # Return an error message as JSON
-    current_user.likes.remove(product)  # Remove the product from the current user's likes
-    db.session.commit()  # Commit the changes to the database
-    return jsonify(product.to_dict()), 200  # Return the unliked product as JSON
+@main_routes.route('/marketplace/<int:id>', methods=['GET'])
+def get_product_detail(id):
+    product = Product.query.get(int(id))
+    if product:
+        return jsonify(product.to_dict()), 200
+    else:
+        return jsonify({'error': 'Product not found'}), 404

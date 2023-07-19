@@ -1,16 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-// The Dashboard component is a simple navigation menu with links to the various parts of the application
 function Dashboard() {
   return (
-    <div>
+    <div className="dashboard">
       <h1>Dashboard</h1>
-      <ul>
-        <li><Link to="/products">View Products</Link></li> {/* Link to the products page */}
-        <li><Link to="/reviews">View Reviews</Link></li> {/* Link to the reviews page */}
-        <li><Link to="/users">View Users</Link></li> {/* Link to the users page */}
-        <li><Link to="/orders">View Orders</Link></li> {/* Link to the orders page */}
+      <ul className="dashboard-links">
+        <li><Link className="dashboard-link" to="/products">View Products</Link></li>
+        <li><Link className="dashboard-link" to="/reviews">View Reviews</Link></li>
+        <li><Link className="dashboard-link" to="/users">View Users</Link></li>
+        <li><Link className="dashboard-link" to="/orders">View Orders</Link></li>
       </ul>
     </div>
   );
