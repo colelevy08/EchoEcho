@@ -3,21 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { createReview } from './api.js';
 
 function ReviewForm() {
+  // Set up local states for form inputs
   const [productId, setProductId] = useState("");
   const [body, setBody] = useState("");
   const [rating, setRating] = useState("");
+  
+  // useNavigate hook for redirecting to other routes
   let history = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
+      // Call the createReview API method to add a new review
       const response = await createReview({
         product_id: productId,
         body,
         rating
       });
       console.log('Review added:', response.data);
-      // Redirect to the review list
+      // After successfully adding the review, redirect to the review list
       history.push('/reviews');
     } catch (error) {
       console.error('Error adding review:', error);

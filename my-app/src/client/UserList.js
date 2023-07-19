@@ -3,27 +3,33 @@ import { Link } from 'react-router-dom';
 import { getUsers } from './api.js';
 
 function UserList() {
+  // Local state for storing the list of users
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
+    // This function fetches the list of users from the API
     const fetchUsers = async () => {
       try {
         const response = await getUsers();
-        setUsers(response.data);
+        // Update the users state with the fetched users
+        // Set state to response directly, as the API might not return a 'data' field
+        setUsers(response);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
 
+    // Call the function to fetch the users
     fetchUsers();
-  }, []);
+  }, []);  // Empty dependency array ensures this useEffect hook runs once on component mount
 
   return (
     <div>
       <h1>Users</h1>
+      {/* Iterate over each user and display its username and email */}
       {users.map(user => (
         <div key={user.id}>
-          <h2><Link to={`/user/${user.id}`}>{user.username}</Link></h2>
+          <h2><Link to={`/users/${user.id}`}>{user.username}</Link></h2>
           <p>{user.email}</p>
         </div>
       ))}
