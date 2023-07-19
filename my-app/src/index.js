@@ -1,20 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import ErrorBoundary from './client/ErrorBoundary'; // Importing the ErrorBoundary component
+import ErrorBoundary from './client/ErrorBoundary';
 
-// Render our App component as a child of ErrorBoundary. This means that ErrorBoundary will catch any errors
-// in the component tree rooted at App.
-ReactDOM.render(
+
+ReactDOM.createRoot(
+  document.getElementById('root')
+).render(
   <React.StrictMode>
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
-// Reporting on runtime performance in production
 reportWebVitals();

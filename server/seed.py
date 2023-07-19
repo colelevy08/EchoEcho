@@ -1,52 +1,38 @@
 from models import db, User, Product, Order, Review
 from app import create_app
-import random
-import string
 
-app = create_app()  # Create Flask app
+app = create_app()
 
-# Start a new application context
 with app.app_context():
     # Create users
-    for i in range(10):  # Create 10 users
-        username = f'user{i}'
-        email = f'user{i}@example.com'
-        user = User.query.filter_by(username=username).first()
+    usernames = ["user1", "user2", "user3", "user4", "user5"]
+    emails = ["user1@example.com", "user2@example.com", "user3@example.com", "user4@example.com", "user5@example.com"]
+    passwords = ["password1", "password2", "password3", "password4", "password5"]
+    for i in range(5):
+        user = User.query.filter_by(username=usernames[i]).first()
         if user is None:
-            user = User(username=username, email=email)
-            user.set_password('password')  # Set user password
-            db.session.add(user)  # Add the user to the database session
-
-    db.session.commit()  # Commit the session to assign IDs
+            user = User(username=usernames[i], email=emails[i])
+            user.set_password(passwords[i])
+            db.session.add(user)
+    db.session.commit()
 
     # Create products
-    for i in range(10):  # Create 10 products
-        name = f'product{i}'
-        description = 'description' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))  # Random description
-        price = random.uniform(1.0, 100.0)  # Random price between 1.0 and 100.0
-        product = Product(name=name, description=description, price=price)
-
-        # Add product to the session
+    product_names = ["product1", "product2", "product3", "product4", "product5"]
+    product_descriptions = ["description1", "description2", "description3", "description4", "description5"]
+    product_prices = [10.99, 20.99, 30.99, 40.99, 50.99]
+    for i in range(5):
+        product = Product(name=product_names[i], description=product_descriptions[i], price=product_prices[i])
         db.session.add(product)
+    db.session.commit()
 
-    db.session.commit()  # Commit the session to assign IDs
-
-    # Assuming users and products were successfully added, create associations between users and products
-    users = User.query.all()
-    products = Product.query.all()
-
-    for user in users:
-        for product in products:
-            # Each user orders each product once
-            order = Order(user_id=user.id, product_id=product.id)
+    # Create orders and reviews
+    for i in range(1, 6):
+        user = User.query.get(i)
+        for j in range(1, 6):
+            product = Product.query.get(j)
+            order = Order(user_id=user.id, product_id=product.id, quantity=j)
             db.session.add(order)
-
-            # Each user reviews each product once
-            review = Review(user_id=user.id, product_id=product.id, body='Great product!', rating=random.randint(1, 5))
+            review = Review(user_id=user.id, product_id=product.id, body=f"Review {j} by {user.username}", rating=j)
             db.session.add(review)
-
-            # Each user likes each product
             product.liked_by.append(user)
-
-    # Commit the session again to save the associations
     db.session.commit()

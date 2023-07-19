@@ -41,7 +41,11 @@ export async function signUp(username, email, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
-    return handleResponse(response);
+    if (!response.ok) {
+        const message = `An error has occurred: ${response.status} ${await response.text()}`;
+        throw new Error(message);
+    }
+    return response.json();
 }
 
 export async function login(email, password) {
@@ -72,7 +76,7 @@ export async function updateUser(id, username, email, password) {
 
 // Function to get a specific product by id
 export async function getProduct(id) {
-    const response = await fetch(`${API_URL}/marketplace/${id}`);
+    const response = await fetch(`${API_URL}/products/${id}`);
     return handleResponse(response);
 }
 

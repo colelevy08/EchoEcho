@@ -3,22 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { signUp } from './api.js';
 
 function SignupForm() {
-  // Local states for form inputs
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   
-  // useNavigate hook for redirecting to other routes
-  let history = useNavigate();
+  let navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setError("");
+    if (username.length < 3) {
+      setError("Username must be at least 3 characters long.");
+      return;
+    }
     try {
-      // Call the signUp API method to create a new user
       const response = await signUp(username, email, password);
-      console.log('User added:', response.data);
-      // After successfully creating the user, redirect to the login page
-      history.push('/login');
+      console.log('User added:', response);
+      navigate('/login');
     } catch (error) {
       console.error('Error adding user:', error);
     }
@@ -38,6 +40,7 @@ function SignupForm() {
         Password:
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
       </label>
+      {error && <p>{error}</p>}
       <input type="submit" value="Sign Up" />
     </form>
   );
