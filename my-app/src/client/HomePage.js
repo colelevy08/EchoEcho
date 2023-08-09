@@ -29,8 +29,6 @@ function HomePage() {
         </>
       )}
       <Link to="/Dashboard">Dashboard</Link>
-      <Link to="/MyLikes">My Likes</Link>
-
     </div>
   );
 }

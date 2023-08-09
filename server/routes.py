@@ -19,14 +19,12 @@ def get_user(id):
         return jsonify(user.to_dict())
     return jsonify({"error": "User not found"}), 404
 
-
 @main_routes.route('/users/current-user', methods=['GET'])
 def get_current_user():
     if current_user.is_authenticated:
         return jsonify(current_user.to_dict()), 200
     else:
         return jsonify({'error': 'No user logged in'}), 401
-
 
 @main_routes.route('/signup', methods=['POST'])
 def signup():
@@ -49,8 +47,16 @@ def signup():
     if existing_user:
         return jsonify({'error': 'Username already exists'}), 400
 
+    existing_email = User.query.filter_by(email=email).first()
+    if existing_email:
+        return jsonify({'error': 'Email already exists'}), 400
+
     user = User(username=username, email=email)
-    user.set_password(password)
+    try:
+        user.set_password(password)
+    except ValueError as e:
+        return jsonify({'error': str(e)}), 400
+
     db.session.add(user)
     try:
         db.session.commit()
@@ -87,8 +93,7 @@ def logout():
     logout_user()
     return jsonify({'message': 'Logged out'}), 200
 
-
-@main_routes.route('/users/<int:id>', methods=['PATCH'])
+@main_routes.route('/users/<int:id>', methods=['PUT'])
 @login_required
 def update_user(id):
     if current_user.id != id:
@@ -111,7 +116,11 @@ def update_user(id):
     current_user.username = username
     current_user.email = email
     if password:
-        current_user.set_password(password)
+        try:
+            current_user.set_password(password)
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+
     try:
         db.session.commit()
     except exc.IntegrityError:
@@ -132,6 +141,40 @@ def get_product(id):
         return jsonify(product.to_dict())
     return jsonify({"error": "Product not found"}), 404
 
+@main_routes.route('/orders', methods=['POST'])
+@login_required
+def create_order():
+    data = request.get_json()
+    product_id = data.get('product')
+    quantity = data.get('quantity')
+
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    order = Order(product_id=product_id, quantity=quantity, user_id=current_user.id)
+    db.session.add(order)
+    db.session.commit()
+
+    return jsonify(order.to_dict()), 201
+
+@main_routes.route('/reviews', methods=['POST'])
+@login_required
+def create_review():
+    data = request.get_json()
+    product_id = data.get('product')
+    rating = data.get('rating')
+    review_text = data.get('review')
+
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+
+    review = Review(product_id=product_id, rating=rating, review_text=review_text, user_id=current_user.id)
+    db.session.add(review)
+    db.session.commit()
+
+    return jsonify(review.to_dict()), 201
 
 @main_routes.route('/products', methods=['POST'])
 @login_required
@@ -159,47 +202,6 @@ def create_product():
     db.session.add(product)
     db.session.commit()
     return jsonify(product.to_dict()), 201
-
-@main_routes.route('/products/<int:product_id>/like', methods=['POST'])
-@login_required
-def like_product(product_id):
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'error': 'Product not found'}), 404
-    if current_user.is_liking(product):
-        return jsonify({'error': 'Product already liked'}), 400
-    current_user.like_product(product)
-    db.session.commit()
-    return jsonify({'message': 'Product liked'}), 200
-
-@main_routes.route('/products/<int:product_id>/unlike', methods=['POST'])
-@login_required
-def unlike_product(product_id):
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'error': 'Product not found'}), 404
-    if not current_user.is_liking(product):
-        return jsonify({'error': 'Product not liked yet'}), 400
-    current_user.unlike_product(product)
-    db.session.commit()
-    return jsonify({'message': 'Product unliked'}), 200
-
-@main_routes.route('/users/<int:user_id>/likes', methods=['GET'])
-def get_user_likes(user_id):
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    liked_products = user.likes
-    return jsonify([product.to_dict()
-        for product in liked_products]), 200
-
-@main_routes.route('/products/<int:product_id>/likes', methods=['GET'])
-def get_product_likes(product_id):
-    product = Product.query.get(product_id)
-    if not product:
-        return jsonify({'error': 'Product not found'}), 404
-    likers = product.liked_by
-    return jsonify([user.to_dict() for user in likers]), 200
 
 @main_routes.route('/products/<int:product_id>/reviews', methods=['GET'])
 def get_product_reviews(product_id):
@@ -231,3 +233,43 @@ def get_product_detail(id):
         return jsonify(product.to_dict()), 200
     else:
         return jsonify({'error': 'Product not found'}), 404
+
+@main_routes.route('/products/<int:product_id>/like', methods=['POST'])
+@login_required
+def like_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    if current_user.is_liking(product):
+        return jsonify({'error': 'Product already liked'}), 400
+    current_user.like_product(product)
+    db.session.commit()
+    return jsonify({'message': 'Product liked'}), 200
+
+@main_routes.route('/products/<int:product_id>/unlike', methods=['POST'])
+@login_required
+def unlike_product(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    if not current_user.is_liking(product):
+        return jsonify({'error': 'Product not liked yet'}), 400
+    current_user.unlike_product(product)
+    db.session.commit()
+    return jsonify({'message': 'Product unliked'}), 200
+
+@main_routes.route('/users/<int:user_id>/liked-products', methods=['GET'])
+def get_user_likes(user_id):
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({'error': 'User not found'}), 404
+    liked_products = user.likes
+    return jsonify([product.to_dict() for product in liked_products]), 200
+
+@main_routes.route('/products/<int:product_id>/likers', methods=['GET'])
+def get_product_likes(product_id):
+    product = Product.query.get(product_id)
+    if not product:
+        return jsonify({'error': 'Product not found'}), 404
+    likers = product.liked_by
+    return jsonify([user.to_dict() for user in likers]), 200

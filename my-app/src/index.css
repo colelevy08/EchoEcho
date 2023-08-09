@@ -1,27 +1,43 @@
 /* General Styles */
 body {
-  background-color: #2d3436;
-  font-family: 'Roboto', sans-serif;
-  color: #dfe6e9;
+  background-color: #6C757D; /* storm gray */
+  background-image: url('https://pbs.twimg.com/media/F1e9arBaMAAYl1G?format=jpg&name=small');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  font-family: 'Courier New', monospace; /* updated font */
+  color: #FFFFFF;
+}
+
+/* Homepage and Dashboard Styles */
+.homepage, .dashboard {
+  background-repeat: no-repeat;
+  background-image: URL('https://pbs.twimg.com/media/F1e9arBaMAAYl1G?format=jpg&name=small');
+  background-position: center;
+  background-size: cover;
 }
 
 /* Navigation */
-nav {
-  background-color: #636e72;
-  padding: 20px;
-}
-
+n/* Navigation */
 nav a {
-  color: #dfe6e9;
+  color: #FFFFFF;
   text-decoration: none;
   margin-right: 15px;
+  font-size: 18px;
+  transition: color 0.3s ease-in-out; /* animate the color change */
 }
+
+nav a:hover {
+  color: #FFD700; /* Change to goldenrod when hovered */
+}
+
+
 
 /* Buttons */
 button, input[type="submit"] {
-  background-color: #fdcb6e;
+  background-color: #FFFFFF;
   border: none;
-  color: #2d3436;
+  color: #000000;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -29,11 +45,17 @@ button, input[type="submit"] {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: #ccc;
 }
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {
-  color: #fdcb6e;
+  color: #78b5ff;
+  text-shadow: 2px 2px 4px #000000;
 }
 
 /* Vinyl Record Images */
@@ -41,10 +63,14 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   max-height: 300px;
   object-fit: cover;
+  border-radius: 50%; /* to make the image circular like a vinyl record */
 }
 
 /* Dashboard Styles */
 .dashboard h1 {
+  color: #78b5ff;  /* Change the color to white */
+  text-shadow: 2px 2px 4px #000000;
+  font-family: 'Cursive', monospace; /* updated font */
   text-align: center;
   margin-top: 50px;
 }
@@ -52,27 +78,46 @@ h1, h2, h3, h4, h5, h6 {
 .dashboard ul {
   list-style: none;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   padding-left: 0;
+  flex-wrap: wrap;
 }
 
 .dashboard ul li {
   margin: 0 10px;
 }
 
+/* Dashboard Styles */
 .dashboard ul li a {
-  color: #fdcb6e;
+  color: #FFFFFF;
   text-decoration: none;
+  font-size: 1.2em;
+  transition: color 0.3s ease-in-out; /* animate the color change */
 }
 
+.dashboard ul li a:hover {
+  color: #FFD700; /* Change to goldenrod when hovered */
+}
+
+/* Dashboard Styles */
 .dashboard {
   padding: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  margin: 20px;
+  border-radius: 10px;
 }
 
 .dashboard-links {
   list-style-type: none;
-  padding: 0;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black */
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 1em; /* add some space below the links */
 }
+
 
 .dashboard-link {
   display: block;
@@ -80,18 +125,37 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
 }
 
+.homepage-links {
+  list-style-type: none;
+  padding: 1em;
+  background-color: rgba(0, 0, 0, 0.7); /* semi-transparent black */
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin-bottom: 1em; /* add some space below the links */
+}
+
+.homepage-link {
+  display: block;
+  padding: 10px 0;
+  text-decoration: none;
+}
 
 /* Error Boundary Styles */
 .error-boundary {
   text-align: center;
   margin-top: 50px;
-  color: #e17055;
+  color: #FF0000;
 }
 
 /* Login and Signup Forms */
 .login-form, .signup-form {
   width: 300px;
   margin: 50px auto;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .login-form input, .signup-form input {
@@ -106,12 +170,17 @@ h1, h2, h3, h4, h5, h6 {
 .orders, .products, .reviews, .users {
   width: 80%;
   margin: 50px auto;
+  display: grid;
+  grid-gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
 }
 
 .orders div, .products div, .reviews div, .users div {
-  border: 1px solid #fdcb6e;
+  border: 1px solid #FFFFFF;
   padding: 20px;
   margin-bottom: 20px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
 }
 
 .orders div img, .products div img, .reviews div img, .users div img {
@@ -125,9 +194,11 @@ h1, h2, h3, h4, h5, h6 {
 .product-detail, .user-detail {
   width: 80%;
   margin: 50px auto;
-  border: 1px solid #fdcb6e;
+  border: 1px solid #FFFFFF;
   padding: 20px;
   text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
 }
 
 .product-detail img, .user-detail img {
@@ -141,4 +212,79 @@ h1, h2, h3, h4, h5, h6 {
 .page-404 {
   text-align: center;
   margin-top: 50px;
+  color: #FFFFFF;
+}
+
+/* Link Styles */
+a {
+  transition: color 0.3s ease;
+  padding: 0.5em;
+}
+
+a:hover {
+  color: #FFD700; /* goldenrod */
+}
+
+a:active {
+  color: #ADFF2F; /* greenyellow */
+}
+
+/* Homepage Link Styles */
+#page-links {
+  display: flex;
+  justify-content: space-around;
+  padding: 1em 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  margin-bottom: 2em;
+}
+
+#page-links a {
+  text-decoration: none;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  transition: background 0.3s ease;
+}
+
+#page-links a:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.video-container {
+  display: flex;
+  justify-content: center;
+}
+
+/* Review Page */
+.review-detail {
+  width: 80%;
+  margin: 50px auto;
+  border: 1px solid #FFFFFF;
+  padding: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+.review-detail h2 {
+  color: #d787ff;
+  text-shadow: 2px 2px 4px #000000;
+}
+
+/* Order Page */
+.order-detail {
+  width: 80%;
+  margin: 50px auto;
+  border: 1px solid #FFFFFF;
+  padding: 20px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 10px;
+}
+
+.order-detail h2 {
+  color: #d787ff;
+  text-shadow: 2px 2px 4px #000000;
 }

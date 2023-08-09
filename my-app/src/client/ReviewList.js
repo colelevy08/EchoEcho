@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getReviews } from './api.js';
+import { Link } from 'react-router-dom';
 
 function ReviewList() {
   // Local state for storing the list of reviews
@@ -25,6 +26,7 @@ function ReviewList() {
   return (
     <div>
       <h1>Reviews</h1>
+      <h2><Link to={`./ReviewForm`}>Leave a Review</Link></h2>
       {/* Iterate over each review and display its body and rating */}
       {reviews.map(review => (
         <div key={review.id}>

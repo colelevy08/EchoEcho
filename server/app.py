@@ -5,6 +5,13 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
+import logging
+from logging.handlers import RotatingFileHandler
+
+app = Flask(__name__)
+app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this!
+
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -48,3 +55,46 @@ def create_app(test_config=None):
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True, port=5555)
+
+if not app.debug:
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/echoecho.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('Echoecho startup')
+
+@main_routes.route('/login', methods=['POST'])
+def login():
+    if not request.is_json:
+        return jsonify({"error": "Missing JSON in request"}), 400
+
+    data = request.get_json()
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or "@" not in email:
+        return jsonify({"error": "Invalid email address"}), 400
+    if not password:
+        return jsonify({"error": "Missing password"}), 400
+
+    user = User.query.filter_by(email=email).first()
+    if user is None or not user.check_password(password):
+        return jsonify({'error': 'Invalid email or password'}), 401
+
+    # Create the tokens we will be sending back to the user
+    access_token = create_access_token(identity=email)
+
+    # Return the tokens in the response
+    return jsonify(access_token=access_token), 200
+
+@main_routes.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    # Access the identity of the current user with get_jwt_identity
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200

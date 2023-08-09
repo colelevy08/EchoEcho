@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getOrders } from './api.js';
 
 function OrderList() {
@@ -25,6 +26,8 @@ function OrderList() {
   return (
     <div>
       <h1>Orders</h1>
+      <h2><Link to={`./OrderForm`}>Place an Order</Link></h2>
+
       {/* Iterate over each order and display its details */}
       {orders.map(order => (
         <div key={order.id}>

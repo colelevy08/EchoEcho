@@ -22,11 +22,9 @@ function SignupForm() {
       return;
     }
     try {
-      const response = await signUp(username, email, password);
-      console.log('User added:', response);
+      await signUp(username, email, password);
       navigate('/login');
     } catch (error) {
-      console.error('Error adding user:', error);
       setError(error.message);  // Show error message to user
     }
   };
@@ -35,15 +33,15 @@ function SignupForm() {
     <form onSubmit={handleSubmit}>
       <label>
         Username:
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+        <input type="text" value={username} onChange={e => setUsername(e.target.value)} required />
       </label>
       <label>
         Email:
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
       </label>
       <label>
         Password:
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
       </label>
       {error && <p>{error}</p>}
       <input type="submit" value="Sign Up" />

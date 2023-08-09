@@ -1,49 +1,41 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createProduct } from './api.js';
+import axios from 'axios';
 
 function ProductForm() {
-  // Local states for form inputs
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  
-  // useNavigate hook for redirecting to other routes
-  let history = useNavigate();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      // Call the createProduct API method to create a new product
-      const response = await createProduct({
-        name,
-        description,
-        price
-      });
-      console.log('Product created:', response.data);
-      // After successfully creating the product, redirect to the product list
-      history.push('/products');
+      const response = await axios.post('/api/products', { name, description, price });
+      setMessage(`Product created successfully: ${response.data.name}`);
     } catch (error) {
-      console.error('Error creating product:', error);
+      setMessage('Error creating product');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input type="text" value={name} onChange={e => setName(e.target.value)} />
-      </label>
-      <label>
-        Description:
-        <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
-      </label>
-      <label>
-        Price:
-        <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
-      </label>
-      <input type="submit" value="Create Product" />
-    </form>
+    <div className="ProductForm">
+      <form onSubmit={handleSubmit}>
+        <label>
+          Name:
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+        </label>
+        <label>
+          Description:
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+        </label>
+        <label>
+          Price:
+          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+        </label>
+        <button type="submit">Create Product</button>
+      </form>
+      {message && <div>{message}</div>}
+    </div>
   );
 }
 

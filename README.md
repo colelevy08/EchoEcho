@@ -10,18 +10,20 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 - Message new friends and people selling music equipment
 
 ## Features
-- Upon opening the app, the user will be greeted with a welcome screen where they can either sign up or log in.
-- Users can customize their profiles with their own interests and update their profiles later.
-- Users can view a list of potential friends who have positively interacted with their profile but have not 'matched'.
-- Users can view a list of 'matches' (friends list) and delete friends.
-- Users can send messages to their friends.
+- Upon opening the app, the user will be greeted with a welcome screen where they can either sign up or log in.- Users can view a list of potential friends who have positively interacted with their profile but have not 'matched'.
+- Discover new music
+- View listed products and their reviews
 - Leave a review on a certain album, piece of equipment, or live performance
 - Users can "create a marketplace" and sell there music equipment, or buy from others marketplaces
-- Search for specific users, ablums, and music equipment.
 
 ## Strech Goals
 - Users can buy and sell live event tickets
 - Videos shared from the same venue on the same date are automatically grouped with a # for easy playback of your favorite musicians live performances
+- Users can follow people and share other data/information
+- Users can customize their profiles with their own interests and update their profiles later.
+- Search for specific users, ablums, and music equipment.
+
+
 
 
 ## Tech Stack:

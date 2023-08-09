@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import { UserProvider } from './client/UserContext.js';  // Import UserProvider
+import { UserProvider } from './client/UserContext.js';  
 import Dashboard from './client/Dashboard.js';
 import HomePage from './client/HomePage.js';
 import LoginForm from './client/LoginForm.js';
@@ -17,6 +17,7 @@ import UserDetail from './client/UserDetail.js';
 import UserForm from './client/UserForm.js';
 import UserList from './client/UserList.js';
 import MyLikes from './client/MyLikes.js'
+import ErrorBoundary from './client/ErrorBoundary.js';
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
   const [error, setError] = useState(null);
 
   const logoutUser = () => {
-    setUser(null); // Clear the user upon logout
+    setUser(null); 
   };
 
   useEffect(() => {
@@ -55,9 +56,10 @@ function App() {
 
     return (
       <Router>
-        <UserProvider>  {/* Add UserProvider */}
+        <UserProvider>  
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/HomePage" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/login" element={<LoginForm />} />
             <Route path="/signup" element={<SignupForm />} />

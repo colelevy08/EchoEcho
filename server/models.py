@@ -21,10 +21,22 @@ class User(UserMixin, db.Model):
     def set_password(self, password):
         if not password or len(password) < 8:
             raise ValueError('Password must be at least 8 characters.')
-        self.password_hash = generate_password_hash(password)
+        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+        return bcrypt.checkpw(password.encode('utf-8'), self.password_hash)
+
+
+    def is_liking(self, product):
+        return self.likes.filter(likes.c.product_id == product.id).count() > 0
+
+    def like_product(self, product):
+        if not self.is_liking(product):
+            self.likes.append(product)
+
+    def unlike_product(self, product):
+        if self.is_liking(product):
+            self.likes.remove(product)
 
     def to_dict(self):
         return {
@@ -33,22 +45,10 @@ class User(UserMixin, db.Model):
             'email': self.email,
             'likes': [product.id for product in self.likes],
         }
-    
 
     # Added __repr__ method for easier debugging
     def __repr__(self):
         return f'<User {self.username}>'
-
-def is_liking(self, product):
-    return self.likes.filter(likes.c.product_id == product.id).count() > 0
-
-def like_product(self, product):
-    if not self.is_liking(product):
-        self.likes.append(product)
-
-def unlike_product(self, product):
-    if self.is_liking(product):
-        self.likes.remove(product)
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)

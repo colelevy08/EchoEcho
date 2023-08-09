@@ -1,55 +1,54 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProduct, likeProduct } from './api';  // Make sure to import the likeProduct function
+import { getProduct, likeProduct, unlikeProduct } from './api.js';
+import { UserContext } from './UserContext';
 
 function ProductDetail() {
   const { id } = useParams();
+  console.log(id);
   const [product, setProduct] = useState(null);
-  const [error, setError] = useState(null);  // Error state to handle any errors
+  const [liked, setLiked] = useState(false);  // State to keep track of whether the product is liked
+  const { user } = useContext(UserContext);  // Access the user state
 
-  // Function to handle when the like button is clicked
-// Function to handle when the like button is clicked
-const handleLike = async () => {
-  try {
-    await likeProduct(id);  // Call the likeProduct function from the API
-    console.log('Product liked');
-  } catch (error) {
-    console.error('Error liking product:', error);
-    if (error.response && error.response.status === 401) {
-      alert('You need to be logged in to like a product.');
+  const handleLike = async () => {
+    try {
+      if (liked) {
+        // If the product is already liked, unlike it
+        await unlikeProduct(id, user.token);  // Pass the user token
+        setLiked(false);
+      } else {
+        // If the product is not liked, like it
+        await likeProduct(id, user.token);  // Pass the user token
+        setLiked(true);
+      }
+      // Fetch the product details again to ensure we have the latest data
+      const updatedProduct = await getProduct(id);
+      setProduct(updatedProduct);
+    } catch (error) {
+      console.error(error);
     }
-  }
 };
 
 
   useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        const productData = await getProduct(id);
-        setProduct(productData);
-      } catch (error) {
-        console.error('Error fetching product details:', error);
-        setError('Error fetching product details');  // Set the error state
-      }
-    };
-
-    fetchProduct();
+    getProduct(id)
+      .then(data => {
+        setProduct(data.product);
+        setLiked(data.liked);  // Set the initial state of whether the product is liked
+      })
+      .catch(error => console.error(error));
   }, [id]);
 
   if (!product) {
-    return <p>Loading...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;  // Display the error message
+    return <div>Loading... Please make sure the server is running and properly connected</div>;
   }
 
   return (
     <div>
       <h1>{product.name}</h1>
-      <p>Description: {product.description}</p>
-      <p>Price: ${product.price}</p>
-      <button onClick={handleLike}>Like</button>  {/* Like button */}
+      <p>{product.description}</p>
+      <p>{product.price}</p>
+      <button onClick={handleLike}>{liked ? 'Unlike' : 'Like'}</button>  // Change button text based on whether the product is liked
     </div>
   );
 }
