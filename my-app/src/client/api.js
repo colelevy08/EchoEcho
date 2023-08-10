@@ -1,25 +1,9 @@
+// Define the base URL for the API
 const API_URL = 'http://localhost:5555';
 
-function getJwtPayload(token) {
-    if (!token) {
-        throw new Error('Token is undefined');
-    }
-    const parts = token.split('.');
-    if (parts.length !== 3) {
-        throw new Error('Token is not in the correct format');
-    }
-    const payloadBase64 = parts[1];
-    try {
-        const payloadJson = atob(payloadBase64);
-        const payload = JSON.parse(payloadJson);
-        return payload;
-    } catch (error) {
-        throw new Error('Error decoding the token payload');
-    }
-}
-
-
-
+// Helper function to handle responses from fetch requests
+// If the response is OK, it will return the JSON data
+// If not, it will throw an error with the status code
 async function handleResponse(response) {
     if (response.ok) {
         const data = await response.json();
@@ -29,28 +13,34 @@ async function handleResponse(response) {
         throw new Error(message);
     }
 }
-
+// Function to get all users
+// It fetches the users from the API and then uses the handleResponse function to return the data or throw an error
 export async function getUsers() {
     const response = await fetch(`${API_URL}/users`);
     return handleResponse(response);
 }
 
+// Function to get a specific user by id
 export async function getUser(id) {
     const response = await fetch(`${API_URL}/users/${id}`);
     return handleResponse(response);
 }
 
+// Function to get the current user
 export async function getCurrentUser() {
     const response = await fetch(`${API_URL}/users/current-user`);
     return handleResponse(response);
 }
 
+// Function to sign up a new user
+// It sends a POST request with the username, email, and password as JSON in the body
 export async function signUp(username, email, password) {
     const response = await fetch(`${API_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
+    // If response is not ok, throw an error with the status code and the error message from the server
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
@@ -64,56 +54,63 @@ export async function login(email, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
-    const data = await response.json();
-    console.log('Login response:', data); // Log the response
-
+    // If response is not ok, throw an error with the status code and the error message from the server
     if (!response.ok) {
-        // Handle the error based on the JSON response
-        const message = `An error has occurred: ${response.status} ${data.error || 'Unknown error'}`;
+        const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
     }
-
-    // Check if access_token is present in the response
-    if (!data.access_token) {
-        throw new Error('Access token is missing in the response');
-    }
-
-    const { access_token } = data;
-    localStorage.setItem('access_token', access_token);
-    return getJwtPayload(access_token);
+    return handleResponse(response);
 }
 
-
-export function logoutUser() {
-    localStorage.removeItem('access_token');
-}
-
+// Function to log out a user
 export async function logout() {
-    logoutUser();
     const response = await fetch(`${API_URL}/logout`);
     return handleResponse(response);
 }
 
+// Function to update a user's information
+// It sends a PATCH request with the new username, email, and password as JSON in the body
 export async function updateUser(id, username, email, password) {
     const response = await fetch(`${API_URL}/users/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
     return handleResponse(response);
 }
 
+// Function to get a specific product by id
 export async function getProduct(id) {
     const response = await fetch(`${API_URL}/products/${id}`);
-    const data = await handleResponse(response);
-    console.log(data);
-    return data;
+    return handleResponse(response);
 }
 
+// Function to like a product
+// It sends a POST request to the like endpoint of a specific product
+export async function likeProduct(id) {
+    const response = await fetch(`${API_URL}/products/${id}/like`, {
+        method: 'POST',
+    });
+    return handleResponse(response);
+}
+
+// Function to unlike a product
+// It sends a POST request to the unlike endpoint of a specific product
+export async function unlikeProduct(id) {
+    const response = await fetch(`${API_URL}/products/${id}/unlike`, {
+        method: 'POST',
+    });
+    return handleResponse(response);
+}
+
+// Function to get all products in the marketplace
 export async function getProducts() {
     const response = await fetch(`${API_URL}/marketplace`);
     return handleResponse(response);
 }
+
+// Function to add a product to the marketplace
+// It sends a POST request with the product's name, description, and price as JSON in the body
 export async function addProduct(name, description, price) {
     const response = await fetch(`${API_URL}/marketplace`, {
         method: 'POST',
@@ -123,15 +120,19 @@ export async function addProduct(name, description, price) {
     return handleResponse(response);
 }
 
+// Function to update a product's information
+// It sends a PATCH request with the new name, description, and price as JSON in the body
 export async function updateProduct(id, name, description, price) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
-        method: 'PUT',
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, description, price })
     });
     return handleResponse(response);
 }
 
+// Function to delete a product from the marketplace
+// It sends a DELETE request to the specific product's endpoint
 export async function deleteProduct(id) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
         method: 'DELETE'
@@ -139,11 +140,14 @@ export async function deleteProduct(id) {
     return handleResponse(response);
 }
 
+// Function to get all orders
 export async function getOrders() {
     const response = await fetch(`${API_URL}/orders`);
     return handleResponse(response);
 }
 
+// Function to add an order
+// It sends a POST request with the product id and quantity as JSON in the body
 export async function addOrder(productId, quantity) {
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
@@ -153,11 +157,14 @@ export async function addOrder(productId, quantity) {
     return handleResponse(response);
 }
 
+// Function to get all reviews
 export async function getReviews() {
     const response = await fetch(`${API_URL}/reviews`);
     return handleResponse(response);
 }
 
+// Function to add a review
+// It sends a POST request with the review as JSON in the body
 export async function createReview(review) {
     const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
@@ -167,50 +174,39 @@ export async function createReview(review) {
     return handleResponse(response);
 }
 
-export async function createOrder(orderData) {
+// Function to create an order
+// It sends a POST request with the order as JSON in the body
+export async function createOrder(order) {
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
+        body: JSON.stringify(order)
     });
     return handleResponse(response);
 }
 
-export async function createProduct(productData) {
-    const response = await fetch(`${API_URL}/marketplace`, {
-        method: 'POST',
+// Function to get a specific order by id
+export async function getOrder(id) {
+    const response = await fetch(`${API_URL}/orders/${id}`);
+    return handleResponse(response);
+}
+
+// Function to update an order's information
+// It sends a PATCH request with the new product id and quantity as JSON in the body
+export async function updateOrder(id, productId, quantity) {
+    const response = await fetch(`${API_URL}/orders/${id}`, {
+        method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productData)
-    });
-    return handleResponse(response);
-}
-// Function to get product likes for a specific user
-export async function getProductLikes(userId, token) {
-    const response = await fetch(`${API_URL}/users/${userId}/likes`, {
-        headers: { 'Authorization': `Bearer ${token}` }
+        body: JSON.stringify({ product_id: productId, quantity })
     });
     return handleResponse(response);
 }
 
-// Function to like a product
-export async function likeProduct(productId, token) {
-    const response = await fetch(`${API_URL}/products/${productId}/like`, {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` }
+// Function to delete an order
+// It sends a DELETE request to the specific order's endpoint
+export async function deleteOrder(id) {
+    const response = await fetch(`${API_URL}/orders/${id}`, {
+        method: 'DELETE'
     });
-    return handleResponse(response);
-}
-
-// Function to unlike a product
-export async function unlikeProduct(productId, token) {
-    const response = await fetch(`${API_URL}/products/${productId}/unlike`, {
-        method: 'DELETE',
-        headers: { 'Authorization': `Bearer ${token}` }
-    });
-    return handleResponse(response);
-}
-
-export async function getProductLikesForAllProducts() {
-    const response = await fetch(`${API_URL}/products/likes`); // Update this with your actual endpoint
     return handleResponse(response);
 }

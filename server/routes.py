@@ -1,11 +1,17 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 from flask_login import login_required, current_user, login_user, logout_user
 from werkzeug.exceptions import BadRequest
+from werkzeug.security import generate_password_hash, check_password_hash
 from models import User, Product, Order, Review, db
 from flask_cors import CORS
 from sqlalchemy import exc
 
 main_routes = Blueprint('main', __name__)
+users_blueprint = Blueprint('users', __name__)
+products_blueprint = Blueprint('products', __name__)
+orders_blueprint = Blueprint('orders', __name__)
+reviews_blueprint = Blueprint('reviews', __name__)
+
 
 @main_routes.route('/users', methods=['GET'])
 def get_users():
@@ -47,16 +53,8 @@ def signup():
     if existing_user:
         return jsonify({'error': 'Username already exists'}), 400
 
-    existing_email = User.query.filter_by(email=email).first()
-    if existing_email:
-        return jsonify({'error': 'Email already exists'}), 400
-
     user = User(username=username, email=email)
-    try:
-        user.set_password(password)
-    except ValueError as e:
-        return jsonify({'error': str(e)}), 400
-
+    user.set_password(password)
     db.session.add(user)
     try:
         db.session.commit()
@@ -64,8 +62,8 @@ def signup():
         db.session.rollback()
         return jsonify({'error': 'Email already exists'}), 400
 
-    login_user(user)
     return jsonify(user.to_dict()), 201
+
 
 @main_routes.route('/login', methods=['POST'])
 def login():
@@ -84,7 +82,7 @@ def login():
     user = User.query.filter_by(email=email).first()
     if user is None or not user.check_password(password):
         return jsonify({'error': 'Invalid email or password'}), 401
-    login_user(user)
+
     return jsonify(user.to_dict()), 200
 
 @main_routes.route('/logout', methods=['GET'])
