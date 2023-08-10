@@ -5,13 +5,8 @@ import { UserContext } from './UserContext.js';  // Import UserContext
 function HomePage() {
   const { user, setUser } = useContext(UserContext);  // Use UserContext
 
-  const logout = async () => {
-    try {
-      await logout();  // Call the logout function from the API
-      setUser(null);  // Clear the user state
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
+  const logout = () => {
+    setUser(null);  // Clear the user state
   };
 
   return (
@@ -29,6 +24,7 @@ function HomePage() {
         </>
       )}
       <Link to="/Dashboard">Dashboard</Link>
+      <Link to="/MyLikes">My Likes</Link>
     </div>
   );
 }

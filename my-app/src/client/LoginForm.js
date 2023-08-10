@@ -1,41 +1,51 @@
 import React, { useState, useContext } from 'react';
-import { UserContext } from './UserContext';
-import { login } from './api';
+import { useNavigate } from 'react-router-dom';
+import { login } from './api.js'; // Import the login function from the API
+import { UserContext } from './UserContext.js';  // Import UserContext
 
-export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const { setUser } = useContext(UserContext);
+function LoginForm() {
+  // Local states for form inputs
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  
+  const { setUser } = useContext(UserContext);  // Use UserContext
+  
+  // useNavigate hook for redirecting to other routes
+  let navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const user = await login(email, password);
-      setUser(user);
-    } catch (err) {
-      setError(err.message);
+        // Call the login API method to authenticate the user
+        const user = await login(email, password);
+        // Check if user is not undefined before logging and navigating
+        if (user) {
+            console.log('User logged in:', user);
+            setUser(user);  // Set the user state
+            // After successfully logging in the user, redirect to the dashboard
+            navigate('/Dashboard');
+        } else {
+            console.log('User logged in: user undefined');
+        }
+    } catch (error) {
+        console.error('Error logging in:', error);
+        alert(error.message);  // Show error message to user
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label htmlFor="email">Email:</label>
-      <input
-        type="email"
-        id="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <label htmlFor="password">Password:</label>
-      <input
-        type="password"
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button type="submit">Login</button>
-      {error && <p>{error}</p>}
+      <label>
+        Email:
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+      </label>
+      <label>
+        Password:
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+      </label>
+      <input type="submit" value="Log In" />
     </form>
   );
 }
+
+export default LoginForm;
