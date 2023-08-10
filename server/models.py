@@ -57,6 +57,7 @@ class Product(db.Model):
     name = db.Column(db.String(64), index=True, unique=True)
     description = db.Column(db.String(120))
     price = db.Column(db.Float)
+    image_url = db.Column(db.String, nullable=True)
 
     def to_dict(self):
         return {

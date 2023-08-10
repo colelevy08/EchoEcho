@@ -10,6 +10,7 @@ fake = Faker()
 num_records = 10
 
 with app.app_context():
+    session = db.session
     # Empty the database before seeding
     meta = db.metadata
     for table in reversed(meta.sorted_tables):
@@ -30,8 +31,8 @@ with app.app_context():
     db.session.commit()
 
     # Create products
-    product_names = ["Victrola TurnTable", "Beatles White Album, Oriiginal", "Blue Yeti Microphone", "Kendrick Lamar's 'To Pimp a Butterfly' on Vinyl", "Les Paul Guitar"]
-    product_descriptions = ["Record player from 1985 fom Victrola", "Original copy of The Beatles White Ablum on vinyl", "High quality microphone for home studio recording", "President Obama's Favorite Kendrick Album on vinyl!", "Used Les Paul Guitar. Plays like a dream. Color - Red"]
+    product_names = ["Victrola TurnTable", "Beatles White Album, Original", "Blue Yeti Microphone", "Kendrick Lamar's 'To Pimp a Butterfly' on Vinyl", "Les Paul Guitar"]
+    product_descriptions = ["Record player from 1985 from Victrola", "Original copy of The Beatles White Album on vinyl", "High quality microphone for home studio recording", "President Obama's Favorite Kendrick Album on vinyl!", "Used Les Paul Guitar. Plays like a dream. Color - Red"]
     product_prices = [2399.99, 999.99, 1349.99, 2599.99, 349.99]
     for i in range(5):
         product = Product(name=product_names[i], description=product_descriptions[i], price=product_prices[i], image_url="/static/record_player.png")
@@ -40,10 +41,10 @@ with app.app_context():
 
     # Create orders, reviews, and likes
     for user_id in range(1, num_records + 1):
-        user = User.query.get(user_id)
+        user = session.get(User, user_id)  # Use the session variable
         if user is not None:
             for product_id in range(1, random.randint(2, num_records + 1)):  # Each user interacts with 1 to num_records products
-                product = Product.query.get(product_id)
+                product = session.get(Product, product_id)  # Use the session variable
                 if product is not None:
                     # Create order
                     quantity = random.randint(1, 5)

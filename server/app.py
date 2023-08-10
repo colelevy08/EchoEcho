@@ -1,20 +1,13 @@
 import os
-from flask import Flask
+from flask import Flask, Blueprint, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
-from flask import jsonify, request
 import logging
 from logging.handlers import RotatingFileHandler
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
-
-
-app = Flask(__name__)
-app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this!
-
-
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -56,23 +49,25 @@ def create_app(test_config=None):
     from routes import main_routes
     app.register_blueprint(main_routes)
 
+    if not app.debug:
+        if not os.path.exists('logs'):
+            os.mkdir('logs')
+        file_handler = RotatingFileHandler('logs/echoecho.log', maxBytes=10240, backupCount=10)
+        file_handler.setFormatter(logging.Formatter(
+            '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
+        file_handler.setLevel(logging.INFO)
+        app.logger.addHandler(file_handler)
+
+        app.logger.setLevel(logging.INFO)
+        app.logger.info('Echoecho startup')
+
     return app
 
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True, port=5555)
 
-if not app.debug:
-    if not os.path.exists('logs'):
-        os.mkdir('logs')
-    file_handler = RotatingFileHandler('logs/echoecho.log', maxBytes=10240, backupCount=10)
-    file_handler.setFormatter(logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'))
-    file_handler.setLevel(logging.INFO)
-    app.logger.addHandler(file_handler)
-
-    app.logger.setLevel(logging.INFO)
-    app.logger.info('Echoecho startup')
+main_routes = Blueprint('mia', __name__)
 
 @main_routes.route('/login', methods=['POST'])
 def login():
@@ -97,6 +92,7 @@ def login():
 
     # Return the tokens in the response
     return jsonify(access_token=access_token), 200
+
 
 @main_routes.route('/protected', methods=['GET'])
 @jwt_required()
