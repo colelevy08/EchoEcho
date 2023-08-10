@@ -1,15 +1,24 @@
 const API_URL = 'http://localhost:5555';
 
 function getJwtPayload(token) {
+    if (!token) {
+        throw new Error('Token is undefined');
+    }
     const parts = token.split('.');
     if (parts.length !== 3) {
         throw new Error('Token is not in the correct format');
     }
     const payloadBase64 = parts[1];
-    const payloadJson = atob(payloadBase64);
-    const payload = JSON.parse(payloadJson);
-    return payload;
+    try {
+        const payloadJson = atob(payloadBase64);
+        const payload = JSON.parse(payloadJson);
+        return payload;
+    } catch (error) {
+        throw new Error('Error decoding the token payload');
+    }
 }
+
+
 
 async function handleResponse(response) {
     if (response.ok) {
@@ -48,6 +57,7 @@ export async function signUp(username, email, password) {
     }
     return response.json();
 }
+
 export async function login(email, password) {
     const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
@@ -56,14 +66,23 @@ export async function login(email, password) {
     });
     const data = await response.json();
     console.log('Login response:', data); // Log the response
+
     if (!response.ok) {
-        const message = `An error has occurred: ${response.status} ${await response.text()}`;
+        // Handle the error based on the JSON response
+        const message = `An error has occurred: ${response.status} ${data.error || 'Unknown error'}`;
         throw new Error(message);
     }
-    const { access_token } = await response.json();
+
+    // Check if access_token is present in the response
+    if (!data.access_token) {
+        throw new Error('Access token is missing in the response');
+    }
+
+    const { access_token } = data;
     localStorage.setItem('access_token', access_token);
     return getJwtPayload(access_token);
 }
+
 
 export function logoutUser() {
     localStorage.removeItem('access_token');
@@ -188,5 +207,10 @@ export async function unlikeProduct(productId, token) {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
     });
+    return handleResponse(response);
+}
+
+export async function getProductLikesForAllProducts() {
+    const response = await fetch(`${API_URL}/products/likes`); // Update this with your actual endpoint
     return handleResponse(response);
 }

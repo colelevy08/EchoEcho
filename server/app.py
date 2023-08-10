@@ -5,8 +5,11 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
+from flask import jsonify, request
 import logging
 from logging.handlers import RotatingFileHandler
+from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
+
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Change this!
@@ -21,6 +24,7 @@ def create_app(test_config=None):
         SECRET_KEY=os.getenv('SECRET_KEY', 'your-secret-key'),
         SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL', 'sqlite:///echoecho.db'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
+        JWT_SECRET_KEY='your-secret-key' 
     )
 
     if test_config is None:
@@ -42,6 +46,8 @@ def create_app(test_config=None):
 
     login = LoginManager()
     login.init_app(app)
+
+    jwt = JWTManager(app) 
 
     @login.user_loader
     def load_user(id):

@@ -273,3 +273,10 @@ def get_product_likes(product_id):
         return jsonify({'error': 'Product not found'}), 404
     likers = product.liked_by
     return jsonify([user.to_dict() for user in likers]), 200
+
+@main_routes.route('/users/current-user/liked-products', methods=['GET'])
+@login_required
+def get_user_liked_products():
+    liked_products = current_user.likes
+    return jsonify([product.to_dict() for product in liked_products]), 200
+
