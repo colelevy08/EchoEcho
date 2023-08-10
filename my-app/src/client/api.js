@@ -13,8 +13,8 @@ async function handleResponse(response) {
         throw new Error(message);
     }
 }
+
 // Function to get all users
-// It fetches the users from the API and then uses the handleResponse function to return the data or throw an error
 export async function getUsers() {
     const response = await fetch(`${API_URL}/users`);
     return handleResponse(response);
@@ -33,14 +33,12 @@ export async function getCurrentUser() {
 }
 
 // Function to sign up a new user
-// It sends a POST request with the username, email, and password as JSON in the body
 export async function signUp(username, email, password) {
-    const response = await fetch(`${API_URL}/signup`, {
+    const response = await fetch(`${API_URL}/users`, { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
-    // If response is not ok, throw an error with the status code and the error message from the server
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
@@ -48,13 +46,13 @@ export async function signUp(username, email, password) {
     return response.json();
 }
 
+// Function to log in a user
 export async function login(email, password) {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_URL}/auth`, { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
-    // If response is not ok, throw an error with the status code and the error message from the server
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);
@@ -69,7 +67,6 @@ export async function logout() {
 }
 
 // Function to update a user's information
-// It sends a PATCH request with the new username, email, and password as JSON in the body
 export async function updateUser(id, username, email, password) {
     const response = await fetch(`${API_URL}/users/${id}`, {
         method: 'PATCH',
@@ -86,7 +83,6 @@ export async function getProduct(id) {
 }
 
 // Function to like a product
-// It sends a POST request to the like endpoint of a specific product
 export async function likeProduct(id) {
     const response = await fetch(`${API_URL}/products/${id}/like`, {
         method: 'POST',
@@ -95,7 +91,6 @@ export async function likeProduct(id) {
 }
 
 // Function to unlike a product
-// It sends a POST request to the unlike endpoint of a specific product
 export async function unlikeProduct(id) {
     const response = await fetch(`${API_URL}/products/${id}/unlike`, {
         method: 'POST',
@@ -110,7 +105,6 @@ export async function getProducts() {
 }
 
 // Function to add a product to the marketplace
-// It sends a POST request with the product's name, description, and price as JSON in the body
 export async function addProduct(name, description, price) {
     const response = await fetch(`${API_URL}/marketplace`, {
         method: 'POST',
@@ -121,7 +115,6 @@ export async function addProduct(name, description, price) {
 }
 
 // Function to update a product's information
-// It sends a PATCH request with the new name, description, and price as JSON in the body
 export async function updateProduct(id, name, description, price) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
         method: 'PATCH',
@@ -132,7 +125,6 @@ export async function updateProduct(id, name, description, price) {
 }
 
 // Function to delete a product from the marketplace
-// It sends a DELETE request to the specific product's endpoint
 export async function deleteProduct(id) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
         method: 'DELETE'
@@ -147,7 +139,6 @@ export async function getOrders() {
 }
 
 // Function to add an order
-// It sends a POST request with the product id and quantity as JSON in the body
 export async function addOrder(productId, quantity) {
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
@@ -164,7 +155,6 @@ export async function getReviews() {
 }
 
 // Function to add a review
-// It sends a POST request with the review as JSON in the body
 export async function createReview(review) {
     const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
@@ -175,7 +165,6 @@ export async function createReview(review) {
 }
 
 // Function to create an order
-// It sends a POST request with the order as JSON in the body
 export async function createOrder(order) {
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
@@ -192,7 +181,6 @@ export async function getOrder(id) {
 }
 
 // Function to update an order's information
-// It sends a PATCH request with the new product id and quantity as JSON in the body
 export async function updateOrder(id, productId, quantity) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
         method: 'PATCH',
@@ -203,7 +191,6 @@ export async function updateOrder(id, productId, quantity) {
 }
 
 // Function to delete an order
-// It sends a DELETE request to the specific order's endpoint
 export async function deleteOrder(id) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
         method: 'DELETE'
