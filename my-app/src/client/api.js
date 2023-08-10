@@ -210,3 +210,9 @@ export async function deleteOrder(id) {
     });
     return handleResponse(response);
 }
+
+// Function to get all liked products for a specific product
+export async function getProductLikes(product_id) {
+    const response = await fetch(`${API_URL}/products/${product_id}/likes`);
+    return handleResponse(response);
+}

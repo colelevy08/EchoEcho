@@ -1,29 +1,27 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { getProductLikes } from './api.js';
-import { UserContext } from './UserContext';  // Import UserContext
+import React, { useEffect, useState } from 'react';
+import { getProductLikes } from './api';
 
-function MyLikes() {
+function MyLikes({ productId }) { // Assuming productId is passed as a prop
     const [likes, setLikes] = useState([]);
-    const { user } = useContext(UserContext);  // Access the user state
 
     useEffect(() => {
-        if(user && user.token) {  // Check if user and user.token are not null
-            getProductLikes(user.id, user.token)  // Pass the user id and token
-                .then(data => setLikes(data))
-                .catch(error => console.error(error));
-        }
-    }, [user]);  // Re-run the effect when user changes
-    
+        getProductLikes(productId)
+            .then(data => setLikes(data))
+            .catch(error => console.error(error));
+    }, [productId]);
+
     return (
         <div>
-            <h1>My Likes</h1>
-            {likes.map(product => (
-                <div key={product.id}>
-                    <h2>{product.name}</h2>
-                    <p>{product.description}</p>
-                    <p>{product.price}</p>
-                </div>
-            ))}
+            <h2>My Likes</h2>
+            <ul>
+                {likes.map(like => (
+                    <li key={like.id}>
+                        <p>{like.productName}</p>
+                        <p>{like.description}</p>
+                        <p>{like.price}</p>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 }
