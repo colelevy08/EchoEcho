@@ -1,4 +1,4 @@
-const API_URL = 'https://localhost:5555';
+const API_URL = 'http://localhost:5555';
 
 function getJwtPayload(token) {
     const parts = token.split('.');
@@ -54,6 +54,8 @@ export async function login(email, password) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
     });
+    const data = await response.json();
+    console.log('Login response:', data); // Log the response
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;
         throw new Error(message);

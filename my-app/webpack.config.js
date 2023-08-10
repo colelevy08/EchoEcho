@@ -14,13 +14,13 @@ const config = {
             "fs": false,
             "tls": false,
             "net": false,
-            "path": require.resolve('./EchoEcho/my-app/webpack.config.js/path-browserify'), // Use the 'path-browserify' module as a polyfill
-            "zlib": require.resolve('../EchoEcho/my-app/webpack.config.js/browserify-zlib'), // Use the 'browserify-zlib' module as a polyfill
-            "http": require.resolve('./EchoEcho/my-app/webpack.config.js/stream-http'), // Use the 'stream-http' module as a polyfill
-            "https": require.resolve('./EchoEcho/my-app/webpack.config.js/https-browserify'), // Use the 'https-browserify' module as a polyfill
-            "stream": require.resolve('./EchoEcho/my-app/webpack.config.js/stream-browserify'), // Use the 'stream-browserify' module as a polyfill
-            "crypto": require.resolve('./EchoEcho/my-app/webpack.config.js/crypto-browserify'), // Use the 'crypto-browserify' module as a polyfill
-        } 
+            "path": require.resolve('path-browserify'), // Corrected path
+            "zlib": require.resolve('browserify-zlib'), // Corrected path
+            "http": require.resolve('stream-http'), // Corrected path
+            "https": require.resolve('https-browserify'), // Corrected path
+            "stream": require.resolve('stream-browserify'), // Corrected path
+            "crypto": require.resolve('crypto-browserify') // Corrected path
+        }        
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
