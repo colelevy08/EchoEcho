@@ -7,14 +7,19 @@ function Dashboard() {
   const playerRef = useRef();
 
   useEffect(() => {
-    if (window.YT) {
+    const onYouTubeIframeAPIReady = () => {
       createPlayer();
+    };
+
+    if (window.YT && window.YT.Player) {
+      onYouTubeIframeAPIReady();
     } else {
+      window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
       const tag = document.createElement('script');
       tag.src = 'https://www.youtube.com/iframe_api';
-      tag.onload = createPlayer;
       window.document.body.appendChild(tag);
     }
+
 
     function createPlayer() {
       const videoIds = ['HNBCVM4KbUM', 'rBrd_3VMC3c', 'YDgqP_4Q_fM', '2IL-C7sq5Ow', 'Dv3Vj30KjMY', 'B7GfmFexXgs', 'RlPNh_PBZb4', '3c5ocCRSRAI', 'Fpn1imb9qZg', '6SFNW5F8K9Y', 'QrR_gm6RqCo', '4iQmPv_dTI0', ];
