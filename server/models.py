@@ -13,6 +13,7 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(60), nullable=False)
     orders = db.relationship('Order', backref='user', lazy=True)
+    likes = db.relationship('Product', secondary=likes, backref='liked_by')
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
