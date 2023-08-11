@@ -1,7 +1,7 @@
-import React, { useState, useEffect, } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import { UserProvider } from './client/UserContext.js';  
+import './App.css'; // CSS import
+import { UserProvider } from './client/UserContext.js';
 import Dashboard from './client/Dashboard.js';
 import HomePage from './client/HomePage.js';
 import LoginForm from './client/LoginForm.js';
@@ -16,8 +16,7 @@ import SignupForm from './client/SignupForm.js';
 import UserDetail from './client/UserDetail.js';
 import UserForm from './client/UserForm.js';
 import UserList from './client/UserList.js';
-import MyLikes from './client/MyLikes.js'
-import ErrorBoundary from './client/ErrorBoundary.js';
+import MyLikes from './client/MyLikes.js';
 
 function App() {
   const [loading, setLoading] = useState(false);

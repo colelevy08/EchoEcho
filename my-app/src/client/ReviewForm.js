@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../App.css'; // CSS import
+import { createReview } from './api.js';
 
 function ReviewForm() {
   const [product, setProduct] = useState('');
@@ -9,12 +11,7 @@ function ReviewForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/reviews', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product, rating, review }),
-      });
-      const data = await response.json();
+      const data = await createReview({ product, rating, review }); // Using the imported function
       setMessage(`Review created successfully for product: ${data.product}`);
     } catch (error) {
       setMessage('Error creating review');

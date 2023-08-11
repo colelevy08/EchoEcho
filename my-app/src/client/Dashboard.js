@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react'; // Import useState, useEffect, and useRef
 import { Link } from 'react-router-dom';
+import '../App.css'; // CSS import
 
 function Dashboard() {
   const [player, setPlayer] = useState(null);

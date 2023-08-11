@@ -1,43 +1,29 @@
 /* General Styles */
 body {
-  background-color: #6C757D; /* storm gray */
-  background-image: url('https://pbs.twimg.com/media/F1e9arBaMAAYl1G?format=jpg&name=small');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  font-family: 'Courier New', monospace; /* updated font */
-  color: #FFFFFF;
-}
-
-/* Homepage and Dashboard Styles */
-.homepage, .dashboard {
-  background-repeat: no-repeat;
-  background-image: URL('https://pbs.twimg.com/media/F1e9arBaMAAYl1G?format=jpg&name=small');
-  background-position: center;
-  background-size: cover;
+  background-color: #2d3436;
+  font-family: 'Roboto', sans-serif;
+  color: #dfe6e9;
 }
 
 /* Navigation */
-n/* Navigation */
+nav {
+  background-color: #636e72;
+  padding: 20px;
+  display: flex; /* Added for horizontal alignment */
+  justify-content: space-between; /* Added for spacing */
+}
+
 nav a {
-  color: #FFFFFF;
+  color: #dfe6e9;
   text-decoration: none;
   margin-right: 15px;
-  font-size: 18px;
-  transition: color 0.3s ease-in-out; /* animate the color change */
 }
-
-nav a:hover {
-  color: #FFD700; /* Change to goldenrod when hovered */
-}
-
-
 
 /* Buttons */
 button, input[type="submit"] {
-  background-color: #FFFFFF;
+  background-color: #fdcb6e;
   border: none;
-  color: #000000;
+  color: #2d3436;
   padding: 10px 20px;
   text-align: center;
   text-decoration: none;
@@ -45,12 +31,13 @@ button, input[type="submit"] {
   font-size: 16px;
   margin: 4px 2px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: 0.3s; /* Added for smooth transition */
 }
 
 button:hover, input[type="submit"]:hover {
-  background-color: #ccc;
+  background-color: #e17055; /* Added for hover effect */
 }
+
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {

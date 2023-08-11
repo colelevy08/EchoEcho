@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../App.css'; // CSS import
+import { createOrder } from './api.js';
 
 function OrderForm() {
   const [product, setProduct] = useState('');
@@ -8,12 +10,7 @@ function OrderForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product, quantity }),
-      });
-      const data = await response.json();
+      const data = await createOrder({ product, quantity }); // Using the imported function
       setMessage(`Order created successfully: ${data.product}`);
     } catch (error) {
       setMessage('Error creating order');
@@ -27,7 +24,7 @@ function OrderForm() {
           Product:
           <input type="text" value={product} onChange={(e) => setProduct(e.target.value)} required />
         </label>
-        <label> {/* Fixed the closing tag here */}
+        <label>
           Quantity:
           <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
         </label>

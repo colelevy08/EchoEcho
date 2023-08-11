@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../App.css'; // CSS import
+import { addProduct } from './api.js'; // Updated function name
 
 function ProductForm() {
   const [name, setName] = useState('');
@@ -9,12 +11,7 @@ function ProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, price }),
-      });
-      const data = await response.json();
+      const data = await addProduct(name, description, price); // Using the imported function
       setMessage(`Product created successfully: ${data.name}`);
     } catch (error) {
       setMessage('Error creating product');
