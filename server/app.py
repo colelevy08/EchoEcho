@@ -1,10 +1,33 @@
-import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
+from routes import register_routes # Import the register_routes function
+import os
+
+def create_app(test_config=None):
+    app = Flask(__name__, instance_relative_config=True)
+    CORS(app)
+
+    app.config.from_mapping(
+        SECRET_KEY=os.getenv('SECRET_KEY', 'your-secret-key'),
+        SQLALCHEMY_DATABASE_URI=os.getenv('DATABASE_URL', 'sqlite:///echoecho.db'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
+    )
+
+    # ... rest of your app configuration ...
+
+    # Import and register routes
+    register_routes(app) # Call the register_routes function with the app
+
+    return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(debug=True, port=5555)
+
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)

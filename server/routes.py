@@ -32,7 +32,7 @@ def register_routes(app):
             return jsonify(product.to_dict())
         return jsonify({"error": "Product not found"}), 404
 
-    @main_routes.route('/orders', methods=['GET'])
+    @app.route('/orders', methods=['GET'])
     def get_orders():
         orders = Order.query.all()
         return jsonify([order.to_dict() for order in orders]), 200
@@ -272,50 +272,4 @@ def register_routes(app):
             return jsonify(product.to_dict()), 200
         else:
             return jsonify({'error': 'Product not found'}), 404
-
-    @app.route('/products/<int:product_id>/like', methods=['POST'])
-    @login_required
-    def like_product(product_id):
-        product = Product.query.get(product_id)
-        if not product:
-            return jsonify({'error': 'Product not found'}), 404
-        if current_user.is_liking(product):
-            return jsonify({'error': 'Product already liked'}), 400
-        current_user.like_product(product)
-        db.session.commit()
-        return jsonify({'message': 'Product liked'}), 200
-
-    @app.route('/products/<int:product_id>/unlike', methods=['POST'])
-    @login_required
-    def unlike_product(product_id):
-        product = Product.query.get(product_id)
-        if not product:
-            return jsonify({'error': 'Product not found'}), 404
-        if not current_user.is_liking(product):
-            return jsonify({'error': 'Product not liked yet'}), 400
-        current_user.unlike_product(product)
-        db.session.commit()
-        return jsonify({'message': 'Product unliked'}), 200
-
-    @app.route('/users/<int:user_id>/liked-products', methods=['GET'])
-    def get_user_likes(user_id):
-        user = User.query.get(user_id)
-        if not user:
-            return jsonify({'error': 'User not found'}), 4040
-
-        liked_products = user.likes
-        return jsonify([product.to_dict() for product in liked_products]), 200
-
-    @app.route('/products/<int:product_id>/likes', methods=['GET'])
-    def get_product_likes(product_id):
-        product = Product.query.get(product_id)
-        if not product:
-            return jsonify({'error': 'Product not found'}), 404
-        likers = product.liked_by
-        return jsonify([user.to_dict() for user in likers]), 200
-
-    @app.route('/users/current-user/liked-products', methods=['GET'])
-    @login_required
-    def get_user_liked_products():
-        liked_products = current_user.likes
-        return jsonify([product.to_dict() for product in liked_products]), 200
+        
