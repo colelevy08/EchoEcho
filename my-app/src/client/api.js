@@ -2,8 +2,6 @@
 const API_URL = 'http://localhost:5555';
 
 // Helper function to handle responses from fetch requests
-// If the response is OK, it will return the JSON data
-// If not, it will throw an error with the status code
 async function handleResponse(response) {
     if (response.ok) {
         const data = await response.json();
@@ -34,7 +32,7 @@ export async function getCurrentUser() {
 
 // Function to sign up a new user
 export async function signUp(username, email, password) {
-    const response = await fetch(`${API_URL}/signup`, { // Updated endpoint
+    const response = await fetch(`${API_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
@@ -48,7 +46,7 @@ export async function signUp(username, email, password) {
 
 // Function to log in a user
 export async function login(email, password) {
-    const response = await fetch(`${API_URL}/login`, { // Updated endpoint
+    const response = await fetch(`${API_URL}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
@@ -69,7 +67,7 @@ export async function logout() {
 // Function to update a user's information
 export async function updateUser(id, username, email, password) {
     const response = await fetch(`${API_URL}/users/${id}`, {
-        method: 'PATCH',
+        method: 'PUT', // Updated to PUT
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
     });
@@ -106,7 +104,7 @@ export async function getProducts() {
 
 // Function to add a product to the marketplace
 export async function addProduct(name, description, price) {
-    const response = await fetch(`${API_URL}/marketplace`, {
+    const response = await fetch(`${API_URL}/products`, { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, description, price })
@@ -117,7 +115,7 @@ export async function addProduct(name, description, price) {
 // Function to update a product's information
 export async function updateProduct(id, name, description, price) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
-        method: 'PATCH',
+        method: 'PATCH', // Updated method
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, description, price })
     });
@@ -127,7 +125,7 @@ export async function updateProduct(id, name, description, price) {
 // Function to delete a product from the marketplace
 export async function deleteProduct(id) {
     const response = await fetch(`${API_URL}/marketplace/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE' // Updated method
     });
     return handleResponse(response);
 }
@@ -183,7 +181,7 @@ export async function getOrder(id) {
 // Function to update an order's information
 export async function updateOrder(id, productId, quantity) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
-        method: 'PATCH',
+        method: 'PATCH', // Updated method
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ product_id: productId, quantity })
     });
@@ -193,7 +191,7 @@ export async function updateOrder(id, productId, quantity) {
 // Function to delete an order
 export async function deleteOrder(id) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
-        method: 'DELETE'
+        method: 'DELETE' // Updated method
     });
     return handleResponse(response);
 }
@@ -201,5 +199,29 @@ export async function deleteOrder(id) {
 // Function to get all liked products for a specific product
 export async function getProductLikes(product_id) {
     const response = await fetch(`${API_URL}/products/${product_id}/likes`);
+    return handleResponse(response);
+}
+
+// Function to get user liked products
+export async function getUserLikedProducts(userId) {
+    const response = await fetch(`${API_URL}/users/${userId}/liked-products`);
+    return handleResponse(response);
+}
+
+// Function to get current user liked products
+export async function getCurrentUserLikedProducts() {
+    const response = await fetch(`${API_URL}/users/current-user/liked-products`);
+    return handleResponse(response);
+}
+
+// Function to get product reviews
+export async function getProductReviews(productId) {
+    const response = await fetch(`${API_URL}/products/${productId}/reviews`);
+    return handleResponse(response);
+}
+
+// Function to get product detail
+export async function getProductDetail(id) {
+    const response = await fetch(`${API_URL}/marketplace/${id}`);
     return handleResponse(response);
 }

@@ -250,7 +250,7 @@ def register_routes(app):
         product = Product(name=name, description=description, price=price)
         db.session.add(product)
         db.session.commit()
-        return jsonify(product.to_dict()), 
+        return jsonify(product.to_dict()), 201
 
     @app.route('/products/<int:product_id>/reviews', methods=['GET'])
     def get_product_reviews(product_id):
@@ -272,4 +272,85 @@ def register_routes(app):
             return jsonify(product.to_dict()), 200
         else:
             return jsonify({'error': 'Product not found'}), 404
-        
+
+    @app.route('/marketplace/<int:id>', methods=['PATCH'])
+    def update_product(id):
+        if not request.is_json:
+            return jsonify({"error": "Missing JSON in request"}), 400
+
+        product = Product.query.get(int(id))
+        if not product:
+            return jsonify({'error': 'Product not found'}), 404
+
+        data = request.get_json()
+        name = data.get('name', product.name)
+        description = data.get('description', product.description)
+        price = data.get('price', product.price)
+
+        if not name or len(name) < 3:
+            return jsonify({"error": "Name must be at least 3 characters"}), 400
+        if not description or len(description) < 10:
+            return jsonify({"error": "Description must be at least 10 characters"}), 400
+        if not price or price < 0:
+            return jsonify({"error": "Price must be a positive number"}), 400
+
+        product.name = name
+        product.description = description
+        product.price = price
+
+        db.session.commit()
+        return jsonify(product.to_dict()), 200
+
+    @app.route('/marketplace/<int:id>', methods=['DELETE'])
+    def delete_product(id):
+        product = Product.query.get(int(id))
+        if not product:
+            return jsonify({'error': 'Product not found'}), 404
+
+        db.session.delete(product)
+        db.session.commit()
+        return jsonify({'message': 'Product deleted'}), 200
+
+    @app.route('/orders/<int:id>', methods=['GET'])
+    def get_order(id):
+        order = Order.query.get(int(id))
+        if not order:
+            return jsonify({'error': 'Order not found'}), 404
+
+        return jsonify(order.to_dict()), 200
+
+    @app.route('/orders/<int:id>', methods=['PATCH'])
+    def update_order(id):
+        if not request.is_json:
+            return jsonify({"error": "Missing JSON in request"}), 400
+
+        order = Order.query.get(int(id))
+        if not order:
+            return jsonify({'error': 'Order not found'}), 404
+
+        data = request.get_json()
+        product_id = data.get('product_id', order.product_id)
+        quantity = data.get('quantity', order.quantity)
+
+        if not product_id or not Product.query.get(product_id):
+            return jsonify({"error": "Invalid product ID"}), 400
+        if not quantity or quantity < 1:
+            return jsonify({"error": "Quantity must be at least 1"}), 400
+
+        order.product_id = product_id
+        order.quantity = quantity
+
+        db.session.commit()
+        return jsonify(order.to_dict()), 200
+
+    @app.route('/orders/<int:id>', methods=['DELETE'])
+    def delete_order(id):
+        order = Order.query.get(int(id))
+        if not order:
+            return jsonify({'error': 'Order not found'}), 404
+
+        db.session.delete(order)
+        db.session.commit()
+        return jsonify({'message': 'Order deleted'}), 200
+
+    CORS(app, supports_credentials=True)
