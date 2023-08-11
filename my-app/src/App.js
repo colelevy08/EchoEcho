@@ -19,7 +19,6 @@ import UserList from './client/UserList.js';
 import MyLikes from './client/MyLikes.js'
 import ErrorBoundary from './client/ErrorBoundary.js';
 
-
 function App() {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);

@@ -90,6 +90,7 @@ def get_product_likes(product_id):
 def get_user_liked_products():
     liked_products = current_user.likes
     return jsonify([product.to_dict() for product in liked_products]), 200
+
 @main_routes.route('/users/current-user', methods=['GET'])
 def get_current_user():
     if current_user.is_authenticated:
@@ -146,6 +147,7 @@ def login():
     if user is None or not user.check_password(password):
         return jsonify({'error': 'Invalid email or password'}), 401
 
+    login_user(user)
     return jsonify(user.to_dict()), 200
 
 @main_routes.route('/logout', methods=['GET'])
@@ -250,7 +252,6 @@ def create_product():
     db.session.add(product)
     db.session.commit()
     return jsonify(product.to_dict()), 201
-
 @main_routes.route('/products/<int:product_id>/reviews', methods=['GET'])
 def get_product_reviews(product_id):
     product = Product.query.get(product_id)
