@@ -146,7 +146,7 @@ def register_routes(app):
             return jsonify({'error': 'Invalid email or password'}), 401
 
         login_user(user)
-        return jsonify(user.to_dict()), 
+        return jsonify(user.to_dict()), 201 
 
     @app.route('/logout', methods=['GET'])
     @login_required

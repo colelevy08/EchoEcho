@@ -73,6 +73,9 @@ function App() {
             <Route path="/users/new" element={<UserForm />} />
             <Route path="/users/:id" element={<UserDetail />} />
             <Route path="/MyLikes" element={<MyLikes />} />
+            <Route path="/ReviewForm" element={<ReviewForm />} />
+            <Route path="/OrderForm" element={<OrderForm />} />
+            <Route path="/ProductForm" element={<ProductForm />} />
           </Routes>
         </UserProvider>
       </Router>
