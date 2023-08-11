@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function ProductForm() {
   const [name, setName] = useState('');
@@ -10,8 +9,13 @@ function ProductForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/products', { name, description, price });
-      setMessage(`Product created successfully: ${response.data.name}`);
+      const response = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description, price }),
+      });
+      const data = await response.json();
+      setMessage(`Product created successfully: ${data.name}`);
     } catch (error) {
       setMessage('Error creating product');
     }

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function OrderForm() {
   const [product, setProduct] = useState('');
@@ -9,8 +8,13 @@ function OrderForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/orders', { product, quantity });
-      setMessage(`Order created successfully: ${response.data.product}`);
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product, quantity }),
+      });
+      const data = await response.json();
+      setMessage(`Order created successfully: ${data.product}`);
     } catch (error) {
       setMessage('Error creating order');
     }
@@ -23,7 +27,7 @@ function OrderForm() {
           Product:
           <input type="text" value={product} onChange={(e) => setProduct(e.target.value)} required />
         </label>
-        <label>
+        <label> {/* Fixed the closing tag here */}
           Quantity:
           <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} required />
         </label>

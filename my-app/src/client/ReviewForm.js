@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 
 function ReviewForm() {
   const [product, setProduct] = useState('');
@@ -10,8 +9,13 @@ function ReviewForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/reviews', { product, rating, review });
-      setMessage(`Review created successfully for product: ${response.data.product}`);
+      const response = await fetch('/api/reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ product, rating, review }),
+      });
+      const data = await response.json();
+      setMessage(`Review created successfully for product: ${data.product}`);
     } catch (error) {
       setMessage('Error creating review');
     }
