@@ -5,7 +5,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
-from routes import users_blueprint, orders_blueprint, reviews_blueprint, products_blueprint, main_routes
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -41,11 +40,9 @@ def create_app(test_config=None):
     def load_user(id):
         return User.query.get(int(id))
 
-    app.register_blueprint(users_blueprint)
-    app.register_blueprint(products_blueprint)
-    app.register_blueprint(orders_blueprint)
-    app.register_blueprint(reviews_blueprint)
-    app.register_blueprint(main_routes)
+    # Import and register routes
+    from routes import register_routes
+    register_routes(app)
 
     return app
 
