@@ -62,7 +62,7 @@ function App() {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/products" element={<ProductList />} />
-          <Route path="/products/create" element={<ProductForm />} /> {/* Create product */}
+          <Route path="/product/create" element={<ProductForm />} /> {/* Create product */}
           <Route path="/product/:id" element={<ProductDetail />} />
           <Route path="/orders" element={<OrderList />} />
           <Route path="/orders/create" element={<OrderForm />} /> {/* Create order */}
@@ -71,9 +71,10 @@ function App() {
           <Route path="/users" element={<UserList />} />
           <Route path="/users/create" element={<UserForm />} />
           <Route path="/users/:id" element={<UserDetail />} />
-          <Route path="/my-likes" element={<MyLikes />} />
+          <Route path="/MyLikes" element={<MyLikes />} />
           <Route path="/orders/OrderForm" element={<OrderForm />} />
-          
+          <Route path="/reviews/ReviewForm" element={<ReviewForm />} />
+
         </Routes>
       </UserProvider>
     </Router>
