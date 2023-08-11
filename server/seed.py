@@ -34,8 +34,10 @@ with app.app_context():
     product_names = ["Victrola TurnTable", "Beatles White Album, Original", "Blue Yeti Microphone", "Kendrick Lamar's 'To Pimp a Butterfly' on Vinyl", "Les Paul Guitar"]
     product_descriptions = ["Record player from 1985 from Victrola", "Original copy of The Beatles White Album on vinyl", "High quality microphone for home studio recording", "President Obama's Favorite Kendrick Album on vinyl!", "Used Les Paul Guitar. Plays like a dream. Color - Red"]
     product_prices = [2399.99, 999.99, 1349.99, 2599.99, 349.99]
+    product_images = ["/static/record_player.png", "/static/beatles_album.png", "/static/blue_yeti.png", "/static/kendrick_vinyl.png", "/static/les_paul.png"] # Added image URLs
     for i in range(5):
-        product = Product(name=product_names[i], description=product_descriptions[i], price=product_prices[i], image_url="/static/record_player.png")
+        stock_quantity = random.randint(1, 100)  # Added stock quantity
+        product = Product(name=product_names[i], description=product_descriptions[i], price=product_prices[i], image_url=product_images[i], stock_quantity=stock_quantity) # Updated with image_url and stock_quantity
         db.session.add(product)
     db.session.commit()
 
@@ -48,13 +50,14 @@ with app.app_context():
                 if product is not None:
                     # Create order
                     quantity = random.randint(1, 5)
-                    order = Order(user_id=user_id, product_id=product_id, quantity=quantity)
+                    status = 'Pending'  # Added status
+                    order = Order(user_id=user_id, product_id=product_id, quantity=quantity, status=status) # Updated with status
                     db.session.add(order)
 
                     # Create review
-                    body = fake.text(max_nb_chars=200)
+                    comment = fake.text(max_nb_chars=200)  # Changed 'body' to 'comment'
                     rating = random.randint(1, 5)
-                    review = Review(user_id=user_id, product_id=product_id, body=body, rating=rating)
+                    review = Review(user_id=user_id, product_id=product_id, comment=comment, rating=rating)  # Changed 'body' to 'comment'
                     db.session.add(review)
 
                     # Add product to likes

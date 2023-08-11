@@ -34,7 +34,7 @@ export async function getCurrentUser() {
 
 // Function to sign up a new user
 export async function signUp(username, email, password) {
-    const response = await fetch(`${API_URL}/users`, { // Updated endpoint
+    const response = await fetch(`${API_URL}/signup`, { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password })
@@ -48,7 +48,7 @@ export async function signUp(username, email, password) {
 
 // Function to log in a user
 export async function login(email, password) {
-    const response = await fetch(`${API_URL}/auth`, { // Updated endpoint
+    const response = await fetch(`${API_URL}/login`, { // Updated endpoint
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
