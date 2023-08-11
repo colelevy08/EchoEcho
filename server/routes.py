@@ -55,7 +55,6 @@ def register_routes(app):
         return jsonify({'message': 'Product liked'}), 200
 
     @app.route('/products/<int:product_id>/unlike', methods=['POST'])
-    @login_required
     def unlike_product(product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -83,7 +82,6 @@ def register_routes(app):
         return jsonify([user.to_dict() for user in likers]), 200
 
     @app.route('/users/current-user/liked-products', methods=['GET'])
-    @login_required
     def get_user_liked_products():
         liked_products = current_user.likes
         return jsonify([product.to_dict() for product in liked_products]), 200
@@ -149,13 +147,11 @@ def register_routes(app):
         return jsonify(user.to_dict()), 201 
 
     @app.route('/logout', methods=['GET'])
-    @login_required
     def logout():
         logout_user()
         return jsonify({'message': 'Logged out'}), 200
 
     @app.route('/users/<int:id>', methods=['PUT'])
-    @login_required
     def update_user(id):
         if current_user.id != id:
             return jsonify({'error': 'You can only update your own profile'}), 403
@@ -191,7 +187,6 @@ def register_routes(app):
         return jsonify(current_user.to_dict()), 200
 
     @app.route('/orders', methods=['POST'])
-    @login_required
     def create_order():
         data = request.get_json()
         product_id = data.get('product')
@@ -208,7 +203,6 @@ def register_routes(app):
         return jsonify(order.to_dict()), 201
 
     @app.route('/reviews', methods=['POST'])
-    @login_required
     def create_review():
         data = request.get_json()
         product_id = data.get('product')
@@ -226,7 +220,6 @@ def register_routes(app):
         return jsonify(review.to_dict()), 201
 
     @app.route('/products', methods=['POST'])
-    @login_required
     def create_product():
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400

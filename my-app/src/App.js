@@ -53,31 +53,30 @@ function App() {
   }
 
     return (
-      <Router>
-        <UserProvider>  
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/HomePage" element={<HomePage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/products/new" element={<ProductForm />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/orders" element={<OrderList />} />
-            <Route path="/orders/new" element={<OrderForm />} />
-            <Route path="/reviews" element={<ReviewList />} />
-            <Route path="/reviews/new" element={<ReviewForm />} />
-            <Route path="/users" element={<UserList />} />
-            <Route path="/users/new" element={<UserForm />} />
-            <Route path="/users/:id" element={<UserDetail />} />
-            <Route path="/MyLikes" element={<MyLikes />} />
-            <Route path="/ReviewForm" element={<ReviewForm />} />
-            <Route path="/OrderForm" element={<OrderForm />} />
-            <Route path="/ProductForm" element={<ProductForm />} />
-          </Routes>
-        </UserProvider>
-      </Router>
+    <Router>
+      <UserProvider value={{ user, setUser, logoutUser }}> {/* Pass the user context values */}
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/HomePage" element={<HomePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/create" element={<ProductForm />} /> {/* Create product */}
+          <Route path="/product/:id" element={<ProductDetail />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/orders/create" element={<OrderForm />} /> {/* Create order */}
+          <Route path="/reviews" element={<ReviewList />} />
+          <Route path="/reviews/create" element={<ReviewForm />} /> {/* Create review */}
+          <Route path="/users" element={<UserList />} />
+          <Route path="/users/create" element={<UserForm />} />
+          <Route path="/users/:id" element={<UserDetail />} />
+          <Route path="/my-likes" element={<MyLikes />} />
+          <Route path="/orders/OrderForm" element={<OrderForm />} />
+          
+        </Routes>
+      </UserProvider>
+    </Router>
     );
   }
     

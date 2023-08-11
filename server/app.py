@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -44,8 +44,16 @@ def create_app(test_config=None):
     # Import and register routes
     register_routes(app) # Call the register_routes function with the app
 
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path != "" and os.path.exists("build/" + path):
+            return send_from_directory('build', path)
+        else:
+            return send_from_directory('build', 'index.html')
+
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, port=5555) # Set the port to 5555
+    app.run(debug=True, host='0.0.0.0', port=5555) # Set the port to 5555
