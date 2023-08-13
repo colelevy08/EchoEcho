@@ -23,9 +23,12 @@ with app.app_context():
         username = fake.name()
         email = fake.email()
         password = fake.password(length=10, special_chars=True, digits=True, upper_case=True, lower_case=True)
+        first_name = fake.first_name() # Added first name
+        last_name = fake.last_name() # Added last name
+        address = fake.address() # Added address
         user = User.query.filter_by(username=username).first()
         if user is None:
-            user = User(username=username, email=email)
+            user = User(username=username, email=email, first_name=first_name, last_name=last_name, address=address) # Included first_name, last_name, and address
             user.set_password(password)
             db.session.add(user)
             users.append(user)
@@ -52,7 +55,8 @@ with app.app_context():
             # Create order
             quantity = random.randint(1, 5)
             status = 'Pending'
-            order = Order(user_id=user.id, product_id=product.id, quantity=quantity, status=status)
+            shipping_address = user.address # Using user's address as shipping address
+            order = Order(user_id=user.id, product_id=product.id, quantity=quantity, status=status, shipping_address=shipping_address) # Included shipping_address
             db.session.add(order)
 
             # Create review

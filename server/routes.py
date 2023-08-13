@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from flask_login import login_required, current_user, login_user, logout_user
+from flask_login import current_user, login_user, logout_user
 from werkzeug.exceptions import BadRequest
 from models import User, Product, Order, Review, db
 from flask_cors import CORS
@@ -43,7 +43,6 @@ def register_routes(app):
         return jsonify([review.to_dict() for review in reviews]), 200
 
     @app.route('/products/<int:product_id>/like', methods=['POST'])
-    @login_required
     def like_product(product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -85,13 +84,14 @@ def register_routes(app):
     def get_user_liked_products():
         liked_products = current_user.likes
         return jsonify([product.to_dict() for product in liked_products]), 200
-
+    
     @app.route('/users/current-user', methods=['GET'])
     def get_current_user():
         if current_user.is_authenticated:
             return jsonify(current_user.to_dict()), 200
         else:
-            return jsonify({'error': 'No user logged in'}), 401
+            return jsonify({'message': 'No user logged in'}), 200
+
         
     @app.route('/signup', methods=['POST'])
     def signup():
@@ -144,7 +144,9 @@ def register_routes(app):
             return jsonify({'error': 'Invalid email or password'}), 401
 
         login_user(user)
-        return jsonify(user.to_dict()), 201 
+        next_page = request.args.get('next')
+        return redirect(next_page) if next_page else redirect(url_for('home'))  # Corrected here
+
 
     @app.route('/logout', methods=['GET'])
     def logout():
@@ -194,37 +196,33 @@ def register_routes(app):
             # Validate input data
             if not data:
                 return jsonify({'error': 'Missing data'}), 400
-            
-            #from here 
+
             product_id = data.get('productId')
             if not product_id:
                 return jsonify({'error': 'Product ID is required'}), 400
-            
+
             quantity = data.get('quantity')
             if not quantity:
                 return jsonify({'error': 'Quantity is required'}), 400
-            
-            shippingAddress = data.get('shippingAddress')
-            if not quantity:
+
+            shipping_address = data.get('shippingAddress')  # Fixed variable name
+            if not shipping_address:  # Fixed condition
                 return jsonify({'error': 'shippingAddress is required'}), 400
 
-            user_Id = data.get('userId')
-            if not user_Id:
+            user_id = data.get('userId')  # Fixed variable name
+            if not user_id:
                 return jsonify({'error': 'user_Id is required'}), 400
 
             # Ensure product exists
             product = Product.query.get(product_id)
             if not product:
                 return jsonify({'error': 'Product not found'}), 404
-            #to here are extra error handing and not Reried but helpfull for knowing what went wrong 
 
-
-
-            # Create order #ISSUE current_user.id does not exits t
-            order = Order(product_id=product_id, quantity=quantity, user_id=user_Id)
+            # Create order
+            order = Order(product_id=product_id, quantity=quantity, user_id=user_id, shipping_address=shipping_address)  # Added shipping_address
             db.session.add(order)
             db.session.commit()
-            
+
             return jsonify(order.to_dict()), 201
 
         except Exception as e:
@@ -298,12 +296,12 @@ def register_routes(app):
         reviews = Review.query.filter_by(product_id=product_id).all()
         return jsonify([review.to_dict() for review in reviews]), 200
 
-    @app.route('/marketplace', methods=['GET'])
-    def get_marketplace():
-        products = Product.query.all()
-        return jsonify([product.to_dict() for product in products]), 200
+    # @app.route('/products', methods=['GET'])
+    # def get_products():
+    #     products = Product.query.all()
+    #     return jsonify([product.to_dict() for product in products]), 200
 
-    @app.route('/marketplace/<int:id>', methods=['GET'])
+    @app.route('/products/<int:id>', methods=['GET'])
     def get_product_detail(id):
         product = Product.query.get(int(id))
         if product:
@@ -311,7 +309,7 @@ def register_routes(app):
         else:
             return jsonify({'error': 'Product not found'}), 404
 
-    @app.route('/marketplace/<int:id>', methods=['PATCH'])
+    @app.route('/products/<int:id>', methods=['PATCH'])
     def update_product(id):
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
@@ -339,7 +337,7 @@ def register_routes(app):
         db.session.commit()
         return jsonify(product.to_dict()), 200
 
-    @app.route('/marketplace/<int:id>', methods=['DELETE'])
+    @app.route('/products/<int:id>', methods=['DELETE'])
     def delete_product(id):
         product = Product.query.get(int(id))
         if not product:
@@ -392,3 +390,5 @@ def register_routes(app):
         return jsonify({'message': 'Order deleted'}), 200
 
     CORS(app, supports_credentials=True)
+
+ 

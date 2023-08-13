@@ -98,13 +98,12 @@ export async function unlikeProduct(id) {
 
 // Function to get all products in the marketplace
 export async function getProducts() {
-    const response = await fetch(`${API_URL}/marketplace`);
+    const response = await fetch(`${API_URL}/products`);
     return handleResponse(response);
 }
 
-// Function to add a product to the marketplace
 export async function addProduct(name, description, price) {
-    const response = await fetch(`${API_URL}/products`, { // Updated endpoint
+    const response = await fetch(`${API_URL}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, description, price })
@@ -112,9 +111,10 @@ export async function addProduct(name, description, price) {
     return handleResponse(response);
 }
 
+
 // Function to update a product's information
 export async function updateProduct(id, name, description, price) {
-    const response = await fetch(`${API_URL}/marketplace/${id}`, {
+    const response = await fetch(`${API_URL}/products/${id}`, {
         method: 'PATCH', // Updated method
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, description, price })
@@ -124,7 +124,7 @@ export async function updateProduct(id, name, description, price) {
 
 // Function to delete a product from the marketplace
 export async function deleteProduct(id) {
-    const response = await fetch(`${API_URL}/marketplace/${id}`, {
+    const response = await fetch(`${API_URL}/products/${id}`, {
         method: 'DELETE' // Updated method
     });
     return handleResponse(response);
@@ -138,11 +138,11 @@ export async function getOrders() {
 
 // Function to create an order
 export async function createOrder(productId, quantity, shippingAddress) {
-    const userID = getCurrentUser().id ?? 1; // any ID reated error might be due to this 
+    const userId = getCurrentUser().id ?? 1; // Updated to userId
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId, quantity, shippingAddress, userID})
+        body: JSON.stringify({ productId, quantity, shippingAddress, userId }) // Updated to productId, shippingAddress, userId
     });
     return handleResponse(response);
 }

@@ -14,11 +14,12 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
-    first_name = db.Column(db.String(50), nullable=True)
-    last_name = db.Column(db.String(50), nullable=True)
-    address = db.Column(db.String(200), nullable=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(200), nullable=False)
     orders = db.relationship('Order', backref='user', lazy=True)
-    likes = db.relationship('Product', secondary=likes, backref='liked_by')
+    likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
+
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
@@ -57,6 +58,7 @@ class Product(db.Model):
     stock_quantity = db.Column(db.Integer, nullable=False)
     category = db.Column(db.String(50), nullable=True)
     orders = db.relationship('Order', backref='product', lazy=True)
+    reviews = db.relationship('Review', backref='product', lazy=True)  # Added relationship with Review
 
     def __repr__(self):
         return f"Product('{self.name}', '{self.description}', '{self.price}')"
@@ -74,11 +76,13 @@ class Product(db.Model):
 
 class Order(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False) 
     quantity = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default='Pending')
     is_active = db.Column(db.Boolean, default=True)
+    shipping_address = db.Column(db.String(200), nullable=False)  # Added shipping_address field
+
 
     def __repr__(self):
         return f"Order('{self.product_id}', '{self.user_id}', '{self.quantity}')"
@@ -94,8 +98,8 @@ class Order(db.Model):
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     comment = db.Column(db.String(200), nullable=True)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
