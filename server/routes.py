@@ -188,19 +188,48 @@ def register_routes(app):
 
     @app.route('/orders', methods=['POST'])
     def create_order():
-        data = request.get_json()
-        product_id = data.get('product')
-        quantity = data.get('quantity')
+        try:
+            data = request.get_json()
 
-        product = Product.query.get(product_id)
-        if not product:
-            return jsonify({'error': 'Product not found'}), 404
+            # Validate input data
+            if not data:
+                return jsonify({'error': 'Missing data'}), 400
+            
+            #from here 
+            product_id = data.get('productId')
+            if not product_id:
+                return jsonify({'error': 'Product ID is required'}), 400
+            
+            quantity = data.get('quantity')
+            if not quantity:
+                return jsonify({'error': 'Quantity is required'}), 400
+            
+            shippingAddress = data.get('shippingAddress')
+            if not quantity:
+                return jsonify({'error': 'shippingAddress is required'}), 400
 
-        order = Order(product_id=product_id, quantity=quantity, user_id=current_user.id)
-        db.session.add(order)
-        db.session.commit()
+            user_Id = data.get('userId')
+            if not user_Id:
+                return jsonify({'error': 'user_Id is required'}), 400
 
-        return jsonify(order.to_dict()), 201
+            # Ensure product exists
+            product = Product.query.get(product_id)
+            if not product:
+                return jsonify({'error': 'Product not found'}), 404
+            #to here are extra error handing and not Reried but helpfull for knowing what went wrong 
+
+
+
+            # Create order #ISSUE current_user.id does not exits t
+            order = Order(product_id=product_id, quantity=quantity, user_id=user_Id)
+            db.session.add(order)
+            db.session.commit()
+            
+            return jsonify(order.to_dict()), 201
+
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
 
     @app.route('/reviews', methods=['POST'])
     def create_review():
@@ -221,6 +250,8 @@ def register_routes(app):
 
     @app.route('/products', methods=['POST'])
     def create_product():
+        print(request.get_json())
+        
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
 
@@ -228,6 +259,12 @@ def register_routes(app):
         name = data.get('name')
         description = data.get('description')
         price = data.get('price')
+        price = float(price) if price else None
+
+        # Here, let's add default values for the fields that were missing:
+        image_url = data.get('image_url', None)  # default to None if not provided
+        stock_quantity = data.get('stock_quantity', 0)  # default to 0 if not provided
+        category = data.get('category', None)  # default to None if not provided
 
         if not name or len(name) < 3:
             return jsonify({"error": "Name must be at least 3 characters"}), 400
@@ -240,9 +277,17 @@ def register_routes(app):
         if existing_product:
             return jsonify({'error': 'Product already exists'}), 400
 
-        product = Product(name=name, description=description, price=price)
+        product = Product(
+            name=name, 
+            description=description, 
+            price=price, 
+            image_url=image_url,  # Add these fields to the product creation
+            stock_quantity=stock_quantity,
+            category=category
+        )
         db.session.add(product)
         db.session.commit()
+
         return jsonify(product.to_dict()), 201
 
     @app.route('/products/<int:product_id>/reviews', methods=['GET'])

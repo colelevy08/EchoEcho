@@ -1,4 +1,4 @@
-// Define the base URL for the API
+// Define the base URL for the API 
 const API_URL = 'http://localhost:5555';
 
 // Helper function to handle responses from fetch requests
@@ -27,7 +27,7 @@ export async function getUser(id) {
 // Function to get the current user
 export async function getCurrentUser() {
     const response = await fetch(`${API_URL}/users/current-user`);
-    return handleResponse(response);
+    return handleResponse(response) ?? 1;
 }
 
 // Function to sign up a new user
@@ -136,38 +136,13 @@ export async function getOrders() {
     return handleResponse(response);
 }
 
-// Function to add an order
-export async function addOrder(productId, quantity) {
-    const response = await fetch(`${API_URL}/orders`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, quantity })
-    });
-    return handleResponse(response);
-}
-
-// Function to get all reviews
-export async function getReviews() {
-    const response = await fetch(`${API_URL}/reviews`);
-    return handleResponse(response);
-}
-
-// Function to add a review
-export async function createReview(review) {
-    const response = await fetch(`${API_URL}/reviews`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(review)
-    });
-    return handleResponse(response);
-}
-
 // Function to create an order
-export async function createOrder(order) {
+export async function createOrder(productId, quantity, shippingAddress) {
+    const userID = getCurrentUser().id ?? 1; // any ID reated error might be due to this 
     const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(order)
+        body: JSON.stringify({ productId, quantity, shippingAddress, userID})
     });
     return handleResponse(response);
 }
@@ -179,11 +154,11 @@ export async function getOrder(id) {
 }
 
 // Function to update an order's information
-export async function updateOrder(id, productId, quantity) {
+export async function updateOrder(id, productIds, quantities, shippingAddress) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
-        method: 'PATCH', // Updated method
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ product_id: productId, quantity })
+        body: JSON.stringify({ productIds, quantities, shippingAddress })
     });
     return handleResponse(response);
 }
@@ -191,37 +166,48 @@ export async function updateOrder(id, productId, quantity) {
 // Function to delete an order
 export async function deleteOrder(id) {
     const response = await fetch(`${API_URL}/orders/${id}`, {
-        method: 'DELETE' // Updated method
+        method: 'DELETE'
     });
     return handleResponse(response);
 }
 
-// Function to get all liked products for a specific product
-export async function getProductLikes(product_id) {
-    const response = await fetch(`${API_URL}/products/${product_id}/likes`);
+// Function to get all likes for a specific product
+export async function getLikes(productId) {
+    const response = await fetch(`${API_URL}/products/${productId}/likes`);
     return handleResponse(response);
 }
 
-// Function to get user liked products
-export async function getUserLikedProducts(userId) {
-    const response = await fetch(`${API_URL}/users/${userId}/liked-products`);
+// Function to get all likes for the current user
+export async function getUserLikes() {
+    const response = await fetch(`${API_URL}/users/likes`);
     return handleResponse(response);
 }
 
-// Function to get current user liked products
-export async function getCurrentUserLikedProducts() {
-    const response = await fetch(`${API_URL}/users/current-user/liked-products`);
+// Function to get product likes by product id
+export async function getProductLikes(productId) {
+    const response = await fetch(`${API_URL}/products/${productId}/likes`);
     return handleResponse(response);
 }
 
-// Function to get product reviews
-export async function getProductReviews(productId) {
-    const response = await fetch(`${API_URL}/products/${productId}/reviews`);
+// Function to create a review
+export async function createReview(reviewData) {
+    const response = await fetch(`${API_URL}/reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reviewData)
+    });
     return handleResponse(response);
 }
 
-// Function to get product detail
-export async function getProductDetail(id) {
-    const response = await fetch(`${API_URL}/marketplace/${id}`);
+
+// Function to get all reviews
+export async function getReviews() {
+    const response = await fetch(`${API_URL}/reviews`);
     return handleResponse(response);
 }
+
+export async function getAvailableProducts() {
+   const response = await fetch(`${API_URL}/products`)
+    return handleResponse(response)
+}
+
