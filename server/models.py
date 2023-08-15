@@ -11,12 +11,12 @@ likes = db.Table('likes',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), nullable=False)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    address = db.Column(db.String(200), nullable=False)
+    first_name = db.Column(db.String(50), nullable=True) 
+    last_name = db.Column(db.String(50), nullable=True)
+    address = db.Column(db.String(200), nullable=True) 
     orders = db.relationship('Order', backref='user', lazy=True)
     likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
 

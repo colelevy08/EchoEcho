@@ -1,22 +1,24 @@
 from flask import jsonify, request
 from flask_login import current_user, login_user, logout_user
-from werkzeug.exceptions import BadRequest
+from werkzeug.security import check_password_hash
 from models import User, Product, Order, Review, db
 from flask_cors import CORS
 from sqlalchemy import exc
-from error import unexpected_error
+from error import unexpected_error, commit_or_rollback_error
 
 # Function to register routes
 def register_routes(app):
 
     @app.route('/users', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_users():
         users = User.query.all()
         return jsonify([user.to_dict() for user in users]), 200
 
     @app.route('/users/<int:id>', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_user(id):
         user = User.query.get(int(id))
         if user:
@@ -25,24 +27,28 @@ def register_routes(app):
 
     @app.route('/products', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_products():
         products = Product.query.all()
         return jsonify([product.to_dict() for product in products]), 200
 
     @app.route('/orders', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_orders():
         orders = Order.query.all()
         return jsonify([order.to_dict() for order in orders]), 200
 
     @app.route('/reviews', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_reviews():
         reviews = Review.query.all()
         return jsonify([review.to_dict() for review in reviews]), 200
 
     @app.route('/products/<int:product_id>/like', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def like_product(product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -55,6 +61,7 @@ def register_routes(app):
 
     @app.route('/products/<int:product_id>/unlike', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def unlike_product(product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -68,6 +75,7 @@ def register_routes(app):
 
     @app.route('/user/<int:user_id>/likes', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_user_likes(user_id):
         user = User.query.get(user_id)
         if not user:
@@ -77,6 +85,7 @@ def register_routes(app):
 
     @app.route('/products/<int:product_id>/likers', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_product_likes(product_id):
         product = Product.query.get(product_id)
         if not product:
@@ -86,12 +95,14 @@ def register_routes(app):
 
     @app.route('/users/current-user/liked-products', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_user_liked_products():
         liked_products = current_user.likes
         return jsonify([product.to_dict() for product in liked_products]), 200
     
     @app.route('/users/current-user', methods=['GET'])
     @unexpected_error
+    @commit_or_rollback_error
     def get_current_user():
         if current_user.is_authenticated:
             return jsonify(current_user.to_dict()), 200
@@ -101,10 +112,11 @@ def register_routes(app):
         
     @app.route('/signup', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def signup():
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
-
+    
         data = request.get_json()
         username = data.get('username')
         email = data.get('email')
@@ -114,15 +126,16 @@ def register_routes(app):
         if existing_user:
             return jsonify({'error': 'Username already exists'}), 400
 
-        user = User(username=username, email=email)
-        user.set_password(password)  # Assuming this method hashes the password
+        user = User(username=username, email=email, password=password)
         db.session.add(user)
-
+        db.session.commit()
+        
         return jsonify(user.to_dict()), 201
 
 
     @app.route('/login', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def login():
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
@@ -131,13 +144,20 @@ def register_routes(app):
         email = data.get('email')
         password = data.get('password')
 
-        if not email or "@" not in email:
+        if not email:
             return jsonify({"error": "Invalid email address"}), 400
         if not password:
             return jsonify({"error": "Missing password"}), 400
 
-        db.session.commit()
-        return jsonify(), 200
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            return jsonify({"error": "No user found with this email address"}), 401
+
+        if not check_password_hash(user.password, password):  # assuming passwords are hashed in your DB
+            return jsonify({"error": "Incorrect password"}), 401
+
+        return jsonify({"message": "Login successful"}), 200
 
 
     @app.route('/logout', methods=['GET'])
@@ -148,6 +168,7 @@ def register_routes(app):
 
     @app.route('/users/<int:id>', methods=['PUT'])
     @unexpected_error
+    @commit_or_rollback_error
     def update_user(id):
         if current_user.id != id:
             return jsonify({'error': 'You can only update your own profile'}), 403
@@ -171,16 +192,12 @@ def register_routes(app):
         if password:
             current_user.set_password(password)
 
-        try:
-            db.session.commit()
-        except exc.IntegrityError:
-            db.session.rollback()
-            return jsonify({'error': 'Email already exists'}), 400
-
+        db.session.commit()
         return jsonify(current_user.to_dict()), 200
 
     @app.route('/orders', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def create_order():
         data = request.get_json()
         if not data:
@@ -215,6 +232,7 @@ def register_routes(app):
 
     @app.route('/reviews', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def create_review():
         data = request.get_json()
         product_id = data.get('product')
@@ -233,6 +251,7 @@ def register_routes(app):
 
     @app.route('/products', methods=['POST'])
     @unexpected_error
+    @commit_or_rollback_error
     def create_product():
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
@@ -271,6 +290,7 @@ def register_routes(app):
 
     # @app.route('/products', methods=['GET'])
     # @unexpected_error
+    # @commit_or_rollback_error
     # def get_products():
     #     products = Product.query.all()
     #     return jsonify([product.to_dict() for product in products]), 200
@@ -286,6 +306,7 @@ def register_routes(app):
 
     @app.route('/products/<int:id>', methods=['PATCH'])
     @unexpected_error
+    @commit_or_rollback_error
     def update_product(id):
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
@@ -315,6 +336,7 @@ def register_routes(app):
 
     @app.route('/products/<int:id>', methods=['DELETE'])
     @unexpected_error
+    @commit_or_rollback_error
     def delete_product(id):
         product = Product.query.get(int(id))
         if not product:
@@ -335,6 +357,7 @@ def register_routes(app):
 
     @app.route('/orders/<int:id>', methods=['PATCH'])
     @unexpected_error
+    @commit_or_rollback_error
     def update_order(id):
         if not request.is_json:
             return jsonify({"error": "Missing JSON in request"}), 400
@@ -360,6 +383,7 @@ def register_routes(app):
 
     @app.route('/orders/<int:id>', methods=['DELETE'])
     @unexpected_error
+    @commit_or_rollback_error
     def delete_order(id):
         order = Order.query.get(int(id))
         if not order:
