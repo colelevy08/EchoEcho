@@ -75,6 +75,7 @@ function App() {
           <Route path="/MyLikes" element={<MyLikes />} />
           <Route path="/orders/OrderForm" element={<OrderForm />} />
           <Route path="/reviews/ReviewForm" element={<ReviewForm />} />
+          <Route path="/HomePage" element={<HomePage />} />
         </Routes>
       </UserProvider>
     </Router>
