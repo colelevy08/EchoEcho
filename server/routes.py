@@ -25,13 +25,6 @@ def register_routes(app):
         products = Product.query.all()
         return jsonify([product.to_dict() for product in products]), 200
 
-    @app.route('/products/<int:id>', methods=['GET'])
-    def get_product(id):
-        product = Product.query.get(int(id))
-        if product:
-            return jsonify(product.to_dict())
-        return jsonify({"error": "Product not found"}), 404
-
     @app.route('/orders', methods=['GET'])
     def get_orders():
         orders = Order.query.all()
@@ -115,7 +108,7 @@ def register_routes(app):
             return jsonify({'error': 'Username already exists'}), 400
 
         user = User(username=username, email=email)
-        user.set_password(password)
+        user.set_password(password)  # Assuming this method hashes the password
         db.session.add(user)
         try:
             db.session.commit()
@@ -124,6 +117,7 @@ def register_routes(app):
             return jsonify({'error': 'Email already exists'}), 400
 
         return jsonify(user.to_dict()), 201
+
 
     @app.route('/login', methods=['POST'])
     def login():

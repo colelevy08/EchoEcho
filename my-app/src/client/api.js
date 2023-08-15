@@ -4,14 +4,20 @@ const API_URL = 'http://localhost:5555';
 // Helper function to handle responses from fetch requests
 async function handleResponse(response) {
     if (response.ok) {
-        const data = await response.json();
-        return data;
+      const data = await response.json();
+      return data;
     } else {
-        const message = `An error has occurred: ${response.status} ${await response.text()}`;
-        throw new Error(message);
+      const message = `An error has occurred: ${response.status} ${await response.text()}`;
+      throw new Error(message);
     }
-}
-
+  }
+  
+  // Function to get the current user
+  export async function getCurrentUser() {
+    const response = await fetch(`${API_URL}/users/current-user`);
+    return handleResponse(response) ?? null; // Return null if no user is found
+  }
+  
 // Function to get all users
 export async function getUsers() {
     const response = await fetch(`${API_URL}/users`);
@@ -24,11 +30,6 @@ export async function getUser(id) {
     return handleResponse(response);
 }
 
-// Function to get the current user
-export async function getCurrentUser() {
-    const response = await fetch(`${API_URL}/users/current-user`);
-    return handleResponse(response) ?? 1;
-}
 
 // Function to sign up a new user
 export async function signUp(username, email, password) {
