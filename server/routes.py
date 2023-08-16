@@ -83,7 +83,7 @@ def register_routes(app):
         liked_products = user.likes
         return jsonify([product.to_dict() for product in liked_products]), 200
 
-    @app.route('/products/<int:product_id>/likers', methods=['GET'])
+    @app.route('/products/<int:product_id>/likes', methods=['GET'])
     @unexpected_error
     @commit_or_rollback_error
     def get_product_likes(product_id):
@@ -284,13 +284,6 @@ def register_routes(app):
             return jsonify({'error': 'Product not found'}), 404
         reviews = Review.query.filter_by(product_id=product_id).all()
         return jsonify([review.to_dict() for review in reviews]), 200
-
-    # @app.route('/products', methods=['GET'])
-    # @unexpected_error
-    # @commit_or_rollback_error
-    # def get_products():
-    #     products = Product.query.all()
-    #     return jsonify([product.to_dict() for product in products]), 200
 
     @app.route('/products/<int:id>', methods=['GET'])
     @unexpected_error
