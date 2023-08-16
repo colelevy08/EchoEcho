@@ -6,6 +6,9 @@ function SignupForm() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState(""); // New field
+  const [lastName, setLastName] = useState("");  // New field
+  const [shippingAddress, setShippingAddress] = useState(""); // New field
   const [error, setError] = useState("");
   
   let navigate = useNavigate();
@@ -13,16 +16,9 @@ function SignupForm() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-    if (username.length < 3) {
-      setError("Username must be at least 3 characters long.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
-      return;
-    }
+    // Add validation for new fields if needed
     try {
-      await signUp(username, email, password);
+      await signUp(username, email, password, firstName, lastName, shippingAddress); // Include new fields
       navigate('/login');
     } catch (error) {
       setError(error.message);  // Show error message to user
@@ -42,6 +38,18 @@ function SignupForm() {
       <label>
         Password:
         <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+      </label>
+      <label>
+        First Name:
+        <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} required /> {/* New field */}
+      </label>
+      <label>
+        Last Name:
+        <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} required /> {/* New field */}
+      </label>
+      <label>
+        Shipping Address:
+        <input type="text" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} required /> {/* New field */}
       </label>
       {error && <p>{error}</p>}
       <input type="submit" value="Sign Up" />

@@ -136,12 +136,17 @@ def register_routes(app):
         # Create a new user and add to the database
         email = data.get('email')
         password = data.get('password')
-        user = User(username=username, email=email)
+        first_name = data.get('first_name')  # New field
+        last_name = data.get('last_name')    # New field
+        shipping_address = data.get('shipping_address')  # New field
+
+        user = User(username=username, email=email, first_name=first_name, last_name=last_name, shipping_address=shipping_address)  # Include new fields
         user.set_password(password) #hashing the password
         db.session.add(user)
         db.session.commit()
 
         return jsonify(user.to_dict()), 201
+
 
     @app.route('/login', methods=['POST'])
     @unexpected_error
