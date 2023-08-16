@@ -42,6 +42,7 @@ function OrderList() {
     <div>
       <h1>Orders</h1>
       <h2><Link to={`./OrderForm`}>Place an Order</Link></h2>
+      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
 
       {/* Iterate over each order and display its details */}
       {orders.map(order => {

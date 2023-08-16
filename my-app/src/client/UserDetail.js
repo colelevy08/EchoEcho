@@ -36,7 +36,8 @@ function UserDetail() {
   return (
     <div>
       <h1>{user.username}</h1>
-      <p>Email: {user.email}</p>
+      <h3>{user.first_name} {user.last_name}</h3>
+      <p>{user.email}</p>
     </div>
   );
 }

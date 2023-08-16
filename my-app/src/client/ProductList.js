@@ -28,6 +28,7 @@ function ProductList() {
     <div>
       <h1>Products</h1>
       <Link to="/products/create">Create Product</Link> {/* Link to the ProductForm */}
+      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
       {/* Iterate over each product and display its name, description, and price */}
       {products.map(product => (
         <div key={product.id}>

@@ -21,6 +21,8 @@ with app.app_context():
     # Create users
     users = []
     for _ in range(num_records):
+        first_name = fake.name()
+        last_name= fake.name()
         username = fake.name()
         email = fake.email()
         password = fake.password(length=10, special_chars=True, digits=True, upper_case=True, lower_case=True)

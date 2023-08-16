@@ -41,6 +41,7 @@ function ReviewList() {
     <div>
       <h1>Reviews</h1>
       <h2><Link to={`./ReviewForm`}>Leave a Review</Link></h2>
+      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
       {/* Iterate over each review and display its product, comment, and rating */}
       {reviews.map(review => {
         // Find the corresponding product for the review

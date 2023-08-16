@@ -25,7 +25,7 @@ function HomePage() {
           <Link to="/signup">Signup</Link>
         </>
       )}
-      <Link to="/Dashboard">Dashboard</Link>
+      <Link to="/Dashboard">Groove</Link>
     </div>
   );
 }

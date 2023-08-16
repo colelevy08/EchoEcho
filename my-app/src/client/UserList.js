@@ -26,10 +26,12 @@ function UserList() {
   return (
     <div>
       <h1>Users</h1>
+      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
       {/* Iterate over each user and display its username and email */}
       {users.map(user => (
         <div key={user.id}>
           <h2><Link to={`/users/${user.id}`}>{user.username}</Link></h2>
+          <h3>{user.first_name} {user.last_name}</h3>
           <p>{user.email}</p>
         </div>
       ))}
