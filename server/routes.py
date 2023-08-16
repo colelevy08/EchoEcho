@@ -232,15 +232,28 @@ def register_routes(app):
     @commit_or_rollback_error
     def create_review():
         data = request.get_json()
-        product_id = data.get('product')
-        rating = data.get('rating')
-        review_text = data.get('review')
 
-        product = Product.query.get(product_id)
-        if not product:
+        user_id = data.get('userId')
+        if not user_id:
+            return jsonify({'error': 'User ID is required'}), 400
+
+        product_id = Product.query.get(product_id)
+        if not product_id:
             return jsonify({'error': 'Product not found'}), 404
+        
+        rating = data.get('rating')
+        if not user_id:
+            return jsonify({'error': "rating is required"}), 400
+        
+        comment = data.get('comment')
+        if not comment:
+            return jsonify({'error': 'Review text is required'}), 400
+        
+        date_posted = data.get('date_posted')
+        if not date_posted:
+            return jsonify({'error': 'Date posted is required'}), 400
 
-        review = Review(product_id=product_id, rating=rating, review_text=review_text, user_id=current_user.id)
+        review = Review(product_id=product_id, rating=rating, comment=comment, user_id=user_id, date_posted=date_posted)
         db.session.add(review)
         db.session.commit()
 

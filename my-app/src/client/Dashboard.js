@@ -43,10 +43,10 @@ function Dashboard() {
       <h1>EchoEcho</h1>
       <ul className="dashboard-links">
         <li><Link className="dashboard-link" to="/products">Product Listings</Link></li>
+        <li><Link className="dashboard-link" to="/MyLikes">Liked Products</Link></li>
         <li><Link className="dashboard-link" to="/reviews">Reviews</Link></li>
         <li><Link className="dashboard-link" to="/users">Friends</Link></li>
         <li><Link className="dashboard-link" to="/orders">Orders</Link></li>
-        <li><Link className="dashboard-link" to="/MyLikes">Favorites</Link></li>
         <li><Link className="dashboard-link" to="/HomePage">HomePage</Link></li>
       </ul>
       <div className="video-container">

@@ -26,7 +26,7 @@ const Dropdown = () => {
         try {
             // Use selectedProduct as the product to be ordered
             const data = await createOrder(selectedProduct, quantity, address); //was undefined becuase this function does not return anythings
-            setMessage(`Order created successfully for product`);
+            setMessage(`Order created successfully for your product!`);
         } catch (error) {
             setMessage('Error creating order');
         }
@@ -35,12 +35,14 @@ const Dropdown = () => {
     return (
         <div>
             <form onSubmit={handleSubmit}>
+                
                 <select value={selectedProduct} onChange={handleDropdownChange}>
                     <option value="">Select a product</option>
                     {products.map(product => (
                         <option key={product.id} value={product.id}>{product.name}</option>
                     ))}
                 </select>
+
                 <label>
                     Quantity:
                     <input 
@@ -50,6 +52,7 @@ const Dropdown = () => {
                         required 
                     />
                 </label>
+
                 <label>
                     Address:
                     <input 
@@ -59,9 +62,13 @@ const Dropdown = () => {
                         required 
                     />
                 </label>
+
                 <button type="submit">Create Order</button>  {/* Move button inside form */}
+
             </form>
+
             {message && <p>{message}</p>} {/* Display the message */}
+
         </div>
     );
 };
