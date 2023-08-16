@@ -1,21 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { getProduct, likeProduct, unlikeProduct } from './api.js';
+
 function ProductDetail() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [isLiked, setIsLiked] = useState(false);
-  const [error, setError] = useState(null); // Add this line to define the error state
+  const [loading, setLoading] = useState(true); // Add loading state
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchProduct = async () => { // Move fetchProduct inside useEffect
+    const fetchProduct = async () => {
       try {
         const productData = await getProduct(id);
         setProduct(productData);
-        setError(null); // Reset the error state if successful
+        setLoading(false); // Set loading to false when data is fetched
+        setError(null);
       } catch (error) {
         console.error('Error fetching product details:', error);
-        setError('Error fetching product details'); // Set the error state if an error occurs
+        setError('Error fetching product details');
+        setLoading(false); // Set loading to false even if there's an error
       }
     };
 
@@ -40,6 +44,10 @@ function ProductDetail() {
       }
     }
   };
+
+  if (loading) {
+    return <p>Loading... Please Wait.</p>; // Display loading message while fetching data
+  }
 
   if (error) {
     return <p>{error}</p>; // Display the error message if there's an error
