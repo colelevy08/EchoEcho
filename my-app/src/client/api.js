@@ -103,7 +103,7 @@ export async function getProducts() {
     return handleResponse(response);
 }
 
-export async function addProduct(name, description, price) {
+export async function createProduct(name, description, price) {
     const response = await fetch(`${API_URL}/products`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
