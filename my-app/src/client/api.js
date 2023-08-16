@@ -32,11 +32,11 @@ export async function getUser(id) {
 
 
 // Function to sign up a new user
-export async function signUp(username, email, password) {
+export async function signUp(username, email, password, first_name, last_name, shipping_address) {
     const response = await fetch(`${API_URL}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, email, password })
+        body: JSON.stringify({ username, email, password, first_name, last_name, shipping_address })
     });
     if (!response.ok) {
         const message = `An error has occurred: ${response.status} ${await response.text()}`;

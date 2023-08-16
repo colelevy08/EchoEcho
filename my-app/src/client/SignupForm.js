@@ -41,15 +41,15 @@ function SignupForm() {
       </label>
       <label>
         First Name:
-        <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} required /> {/* New field */}
+        <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)} />
       </label>
       <label>
         Last Name:
-        <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} required /> {/* New field */}
+        <input type="text" value={lastName} onChange={e => setLastName(e.target.value)} />
       </label>
       <label>
         Shipping Address:
-        <input type="text" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} required /> {/* New field */}
+        <input type="text" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} />
       </label>
       {error && <p>{error}</p>}
       <input type="submit" value="Sign Up" />
