@@ -21,15 +21,15 @@ with app.app_context():
     # Create users
     users = []
     for _ in range(num_records):
-        first_name = fake.name()
-        last_name= fake.name()
-        username = fake.name()
+        first_name = fake.first_name() # Corrected
+        last_name = fake.last_name()   # Corrected
+        username = fake.user_name()    # Corrected to generate a valid username
         email = fake.email()
         password = fake.password(length=10, special_chars=True, digits=True, upper_case=True, lower_case=True)
         shipping_address = fake.address() # Added shipping address
         user = User.query.filter_by(username=username).first()
         if user is None:
-            user = User(username=username, email=email, shipping_address=shipping_address) # Included shipping_address
+            user = User(first_name=first_name, last_name=last_name, username=username, email=email, shipping_address=shipping_address) # Included first_name, last_name, shipping_address
             user.set_password(password)
             db.session.add(user)
             users.append(user)

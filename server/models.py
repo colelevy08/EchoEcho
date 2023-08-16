@@ -11,13 +11,13 @@ likes = db.Table('likes',
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(60), unique=False, nullable=False)
-    first_name = db.Column(db.String(50), nullable=True) 
-    last_name = db.Column(db.String(50), nullable=True)
+    first_name = db.Column(db.String(50), nullable=False) 
+    last_name = db.Column(db.String(50), nullable=False)
     shipping_address = db.Column(db.String(200), nullable=False) 
-    orders = db.relationship('Order', backref='user', lazy=True)
+    orders = db.relationship('Order', backref='user', lazy=False)
     likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
     active = db.Column(db.Boolean, default=True)
 
@@ -48,10 +48,12 @@ class User(db.Model):
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'first_name': self.first_name,
-            'last_name': self.last_name,
-            'shippingAddress': self.shipping_address,
+            'first_name': self.first_name,  # Add this line
+            'last_name': self.last_name,    # Add this line
+            'shipping_address': self.shipping_address, # Add this line
+            'likes': [product.id for product in self.likes],
         }
+
     
     @property
     def is_active(self): # Added this property method

@@ -35,11 +35,14 @@ function UserDetail() {
 
   return (
     <div>
-      <h1>{user.username}</h1>
-      <h3>{user.first_name} {user.last_name}</h3>
-      <p>{user.email}</p>
+        <h1>{user.username}</h1>
+        <p>Email: {user.email}</p>
+        <p>First Name: {user.first_name}</p> 
+        <p>Last Name: {user.last_name}</p>   
+        <p>Shipping Address: {user.shipping_address}</p> 
     </div>
-  );
+);
+
 }
 
 export default UserDetail;
