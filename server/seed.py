@@ -2,6 +2,8 @@ from models import db, User, Product, Order, Review
 from app import create_app
 from faker import Faker
 import random
+from datetime import datetime
+
 
 app = create_app()
 fake = Faker()
@@ -62,7 +64,8 @@ with app.app_context():
             # Create review
             comment = fake.text(max_nb_chars=200)
             rating = random.randint(1, 5)
-            review = Review(user_id=user.id, product_id=product.id, comment=comment, rating=rating)
+            date_posted = datetime.utcnow() # Current date and time
+            review = Review(user_id=user.id, product_id=product.id, comment=comment, rating=rating, date_posted=date_posted) # Included date_posted
             db.session.add(review)
 
             # Add product to likes

@@ -16,7 +16,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(60), unique=False, nullable=False)
     first_name = db.Column(db.String(50), nullable=True) 
     last_name = db.Column(db.String(50), nullable=True)
-    address = db.Column(db.String(200), nullable=True) 
+    shipping_address = db.Column(db.String(200), nullable=True) 
     orders = db.relationship('Order', backref='user', lazy=True)
     likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
     active = db.Column(db.Boolean, default=True)
@@ -50,7 +50,7 @@ class User(db.Model):
             'email': self.email,
             'first_name': self.first_name,
             'last_name': self.last_name,
-            'address': self.address,
+            'shippingAddress': self.shipping_address,
         }
     
     @property
@@ -106,14 +106,14 @@ class Order(db.Model):
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=True)
-    rating = db.Column(db.Integer, nullable=True)
-    comment = db.Column(db.String(200), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(200), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Review('{self.product_id}', '{self.user_id}', '{self.rating}', '{self.comment}')"
+        return f"Review('{self.product_id}', '{self.user_id}', '{self.rating}', '{self.comment}', '{self.date_posted}')"
 
     def to_dict(self):
         return {

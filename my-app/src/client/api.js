@@ -139,6 +139,12 @@ export async function getOrders() {
     return handleResponse(response);
 }
 
+// Function to get a specific order by id
+export async function getOrder(id) {
+    const response = await fetch(`${API_URL}/orders/${id}`);
+    return handleResponse(response);
+}
+
 // Function to create an order
 export async function createOrder(productId, quantity, shippingAddress) {
     const userId = getCurrentUser().id ?? 1; // Updated to userId
@@ -147,12 +153,6 @@ export async function createOrder(productId, quantity, shippingAddress) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ productId, quantity, shippingAddress, userId }) // Updated to productId, shippingAddress, userId
     });
-    return handleResponse(response);
-}
-
-// Function to get a specific order by id
-export async function getOrder(id) {
-    const response = await fetch(`${API_URL}/orders/${id}`);
     return handleResponse(response);
 }
 

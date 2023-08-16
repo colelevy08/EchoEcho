@@ -5,6 +5,8 @@ from models import User, Product, Order, Review, db
 from flask_cors import CORS
 from sqlalchemy import exc
 from error import unexpected_error, commit_or_rollback_error, validate_json_request, validate_email_password
+from dateutil.parser import parse
+
 
 # Function to register routes
 def register_routes(app):
@@ -231,33 +233,35 @@ def register_routes(app):
     @unexpected_error
     @commit_or_rollback_error
     def create_review():
-        data = request.is_json
+        data = request.get_json()
 
         user_id = data.get('userId')
         if not user_id:
             return jsonify({'error': 'User ID is required'}), 400
 
-        product_id = Product.query.get(product_id)
-        if not product_id:
+        product_id = data.get('productId')
+        if not product_id or not Product.query.get(product_id):
             return jsonify({'error': 'Product not found'}), 404
         
         rating = data.get('rating')
-        if not user_id:
-            return jsonify({'error': "rating is required"}), 400
+        if rating is None:
+            return jsonify({'error': "Rating is required"}), 400
         
         comment = data.get('comment')
         if not comment:
             return jsonify({'error': 'Review text is required'}), 400
         
-        date_posted = data.get('date_posted')
-        if not date_posted:
+        date_posted_str = data.get('date_posted')
+        if date_posted_str:
+            date_posted = parse(date_posted_str) # Parse the string into a datetime object
+        else:
             return jsonify({'error': 'Date posted is required'}), 400
-
         review = Review(product_id=product_id, rating=rating, comment=comment, user_id=user_id, date_posted=date_posted)
         db.session.add(review)
         db.session.commit()
 
         return jsonify(review.to_dict()), 201
+
 
     @app.route('/products', methods=['POST'])
     @unexpected_error
