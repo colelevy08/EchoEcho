@@ -1,42 +1,49 @@
 import React, { useState } from 'react';
-import '../App.css'; // CSS import
-import { createReview } from './api.js';
+import { useNavigate } from 'react-router-dom';
+import { createReview } from './api.js'; // Make sure to define the createReview function in your API file
 
 function ReviewForm() {
-  const [product, setProduct] = useState('');
-  const [rating, setRating] = useState('');
-  const [review, setReview] = useState('');
-  const [message, setMessage] = useState('');
+  // Local states for form inputs
+  const [productId, setProductId] = useState("");
+  const [rating, setRating] = useState("");
+  const [comment, setComment] = useState("");
+  
+  // useNavigate hook for redirecting to other routes
+  let history = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const data = await createReview({ product, rating, review }); // Using the imported function
-      setMessage(`Review created successfully for product: ${data.product}`);
+      // Call the createReview API method to create a new review
+      const response = await createReview({
+        product_id: productId,
+        rating,
+        comment
+      });
+      console.log('Review created:', response.data);
+      // After successfully creating the review, redirect to the review list
+      history.push('/reviews');
     } catch (error) {
-      setMessage('Error creating review');
+      console.error('Error creating review:', error);
     }
   };
 
   return (
-    <div className="ReviewForm">
-      <form onSubmit={handleSubmit}>
-        <label>
-          Product:
-          <input type="text" value={product} onChange={(e) => setProduct(e.target.value)} required />
-        </label>
-        <label>
-          Rating:
-          <input type="number" value={rating} onChange={(e) => setRating(e.target.value)} required />
-        </label>
-        <label>
-          Review:
-          <textarea value={review} onChange={(e) => setReview(e.target.value)} required />
-        </label>
-        <button type="submit">Create Review</button>
-      </form>
-      {message && <div>{message}</div>}
-    </div>
+    <form onSubmit={handleSubmit}>
+      <label>
+        Product ID:
+        <input type="number" value={productId} onChange={e => setProductId(e.target.value)} />
+      </label>
+      <label>
+        Rating:
+        <input type="number" value={rating} onChange={e => setRating(e.target.value)} />
+      </label>
+      <label>
+        Comment:
+        <textarea value={comment} onChange={e => setComment(e.target.value)} />
+      </label>
+      <input type="submit" value="Create Review" />
+    </form>
   );
 }
 

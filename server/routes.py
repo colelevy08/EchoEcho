@@ -1,10 +1,10 @@
 from flask import jsonify, request
 from flask_login import current_user, login_user, logout_user
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from models import User, Product, Order, Review, db
 from flask_cors import CORS
 from sqlalchemy import exc
-from error import unexpected_error, commit_or_rollback_error
+from error import unexpected_error, commit_or_rollback_error, validate_json_request, validate_email_password
 
 # Function to register routes
 def register_routes(app):
@@ -113,52 +113,49 @@ def register_routes(app):
     @app.route('/signup', methods=['POST'])
     @unexpected_error
     @commit_or_rollback_error
+    @validate_json_request
+    @validate_email_password
     def signup():
-        if not request.is_json:
-            return jsonify({"error": "Missing JSON in request"}), 400
-    
         data = request.get_json()
         username = data.get('username')
-        email = data.get('email')
-        password = data.get('password')
 
+        # Check if the username already exists
         existing_user = User.query.filter_by(username=username).first()
         if existing_user:
             return jsonify({'error': 'Username already exists'}), 400
 
-        user = User(username=username, email=email, password=password)
+        # Create a new user and add to the database
+        email = data.get('email')
+        password = data.get('password')
+        user = User(username=username, email=email)
+        user.set_password(password) #hashing the password
         db.session.add(user)
         db.session.commit()
-        
-        return jsonify(user.to_dict()), 201
 
+        return jsonify(user.to_dict()), 201
 
     @app.route('/login', methods=['POST'])
     @unexpected_error
     @commit_or_rollback_error
+    @validate_json_request
+    @validate_email_password
     def login():
-        if not request.is_json:
-            return jsonify({"error": "Missing JSON in request"}), 400
-
         data = request.get_json()
         email = data.get('email')
         password = data.get('password')
 
-        if not email:
-            return jsonify({"error": "Invalid email address"}), 400
-        if not password:
-            return jsonify({"error": "Missing password"}), 400
-
+        # Query the user by email
         user = User.query.filter_by(email=email).first()
 
-        if not user:
-            return jsonify({"error": "No user found with this email address"}), 401
+        # Check if the user exists and the password is correct
+        if user is None or not user.check_password(password): # assuming user.check_password method is defined
+            return jsonify({'error': 'Invalid email or password'}), 401
 
-        if not check_password_hash(user.password, password):  # assuming passwords are hashed in your DB
-            return jsonify({"error": "Incorrect password"}), 401
-
-        return jsonify({"message": "Login successful"}), 200
-
+        # Log in the user
+        login_user(user)
+        print(data)  # Print the request data
+        print(user)  # Print the user object
+        return jsonify(user.to_dict()), 200
 
     @app.route('/logout', methods=['GET'])
     @unexpected_error

@@ -13,19 +13,20 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(60), unique=False, nullable=False)
     first_name = db.Column(db.String(50), nullable=True) 
     last_name = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(200), nullable=True) 
     orders = db.relationship('Order', backref='user', lazy=True)
     likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
-
+    active = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
+
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
@@ -48,6 +49,10 @@ class User(db.Model):
             'last_name': self.last_name,
             'address': self.address,
         }
+    
+    @property
+    def is_active(self): # Added this property method
+        return self.active
 
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
