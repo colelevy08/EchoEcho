@@ -24,6 +24,9 @@ class User(db.Model):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
+    def get_id(self):
+        return str(self.id) 
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
