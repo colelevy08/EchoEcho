@@ -99,6 +99,14 @@ export async function unlikeProduct(id) {
     return handleResponse(response);
 }
 
+// Function to get liked products for a specific user
+export async function getUserLikes(userId) {
+    const response = await fetch(`${API_URL}/user/${userId}/likes`);
+    return handleResponse(response);
+}
+
+
+
 // Function to get all products in the marketplace
 export async function getProducts() {
     const response = await fetch(`${API_URL}/products`);
