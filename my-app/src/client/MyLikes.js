@@ -1,25 +1,26 @@
+// MyLikes.jsx
+
 import React, { useEffect, useState } from 'react';
-import { getUserLikes, getCurrentUser } from './api.js';
+import { getProductLikes } from './api.js';
 
 function MyLikes() {
-    const [product, setProducts] = useState([]);
+    const [likes, setLikes] = useState([]);
+
     useEffect(() => {
-        getCurrentUser()
-        .then((user) => getUserLikes(user.id)
-        .then(data => setProducts(data)))
-        .catch(error => console.error(error));
-    });
-    
+        getProductLikes()
+            .then(data => setLikes(data))
+            .catch(error => console.error(error));
+    }, []);
 
     return (
         <div>
             <h2>My Likes</h2>
             <ul>
-                {product.map(like => (
-                    <li key={product.id}>
-                        <p>{product.productName}</p>
-                        <p>{product.description}</p>
-                        <p>{product.price}</p>
+                {likes.map(like => (
+                    <li key={like.id}>
+                        <p>{like.productName}</p>
+                        <p>{like.description}</p>
+                        <p>{like.price}</p>
                     </li>
                 ))}
             </ul>

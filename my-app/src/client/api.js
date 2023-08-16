@@ -82,12 +82,14 @@ export async function getProduct(id) {
 }
 
 // Function to like a product
+// It sends a POST request to the like endpoint of a specific product
 export async function likeProduct(id) {
     const response = await fetch(`${API_URL}/products/${id}/like`, {
         method: 'POST',
     });
     return handleResponse(response);
 }
+
 
 // Function to unlike a product
 export async function unlikeProduct(id) {

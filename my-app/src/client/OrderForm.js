@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAvailableProducts, createOrder } from './api'; // Import createOrder too
+import { getAvailableProducts, createOrder } from './api.js'; // Import createOrder too
 
 const Dropdown = () => {
     const [products, setProducts] = useState([]);

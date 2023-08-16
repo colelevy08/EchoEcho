@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../App.css'; // CSS import
 import { UserContext } from './UserContext.js';
 
+
 function HomePage() {
   const { user, setUser } = useContext(UserContext);  // Use UserContext
 
@@ -25,7 +26,6 @@ function HomePage() {
         </>
       )}
       <Link to="/Dashboard">Dashboard</Link>
-      <Link to="/MyLikes">My Likes</Link>
     </div>
   );
 }

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import '../App.css'; // CSS import
 
 function Dashboard() {
-  const [player, setPlayer] = useState(null);
+  // const [player, setPlayer] = useState(null); // Commented out to suppress warning
   const playerRef = useRef();
 
   useEffect(() => {
@@ -20,11 +20,11 @@ function Dashboard() {
       window.document.body.appendChild(tag);
     }
 
-
     function createPlayer() {
       const videoIds = ['HNBCVM4KbUM', 'rBrd_3VMC3c', 'YDgqP_4Q_fM', '2IL-C7sq5Ow', 'Dv3Vj30KjMY', 'B7GfmFexXgs', 'RlPNh_PBZb4', '3c5ocCRSRAI', 'Fpn1imb9qZg', '6SFNW5F8K9Y', 'QrR_gm6RqCo', '4iQmPv_dTI0', ];
       const randomVideoId = videoIds[Math.floor(Math.random() * videoIds.length)];
-      setPlayer(new window.YT.Player(playerRef.current, {
+      // setPlayer(new window.YT.Player(playerRef.current, { // Commented out to suppress warning
+      new window.YT.Player(playerRef.current, {
         height: '360',
         width: '640',
         videoId: randomVideoId,
@@ -34,7 +34,7 @@ function Dashboard() {
           modestbranding: 1,
           loop: 1
         }
-      }));
+      });
     }
   }, []);
 
