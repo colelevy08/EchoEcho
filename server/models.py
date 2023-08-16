@@ -16,7 +16,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(60), unique=False, nullable=False)
     first_name = db.Column(db.String(50), nullable=True) 
     last_name = db.Column(db.String(50), nullable=True)
-    shipping_address = db.Column(db.String(200), nullable=True) 
+    shipping_address = db.Column(db.String(200), nullable=False) 
     orders = db.relationship('Order', backref='user', lazy=True)
     likes = db.relationship('Product', secondary=likes, backref=db.backref('liked_by', lazy='dynamic'))
     active = db.Column(db.Boolean, default=True)
@@ -89,11 +89,11 @@ class Order(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     status = db.Column(db.String(50), nullable=False, default='Pending')
     is_active = db.Column(db.Boolean, default=True)
-    shipping_address = db.Column(db.String(200), nullable=False)  # Added shipping_address field
+    shipping_address = db.Column(db.String(200), nullable=True)  # Added shipping_address field
 
 
     def __repr__(self):
-        return f"Order('{self.product_id}', '{self.user_id}', '{self.quantity}')"
+        return f"Order('{self.id}', '{self.product_id}', '{self.user_id}', '{self.quantity}', '{self.status}', {self.shipping_address}'))"
 
     def to_dict(self):
         return {
@@ -102,6 +102,7 @@ class Order(db.Model):
             'user_id': self.user_id,
             'quantity': self.quantity,
             'status': self.status,
+            'shippingAddress': self.shipping_address,
         }
 
 class Review(db.Model):

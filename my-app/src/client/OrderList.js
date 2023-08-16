@@ -55,7 +55,7 @@ function OrderList() {
             <p>Product ID: {order.product_id}</p>
             <p>Quantity: {order.quantity}</p>
             <p>Status: {order.status}</p>
-            <p>Shipping Address: {order.shipping_address}</p>
+            <p>Shipping Address: {order.shippingAddress}</p>
           </div>
         );
       })}
