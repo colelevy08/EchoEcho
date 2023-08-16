@@ -55,11 +55,18 @@ def register_routes(app):
         product = Product.query.get(product_id)
         if not product:
             return jsonify({'error': 'Product not found'}), 404
+
+        # Check if the current user is anonymous
+        if current_user.is_anonymous:
+            return jsonify({'error': 'Anonymous users cannot like products'}), 403
+
         if current_user.is_liking(product):
             return jsonify({'error': 'Product already liked'}), 400
+
         current_user.like_product(product)
         db.session.commit()
         return jsonify({'message': 'Product liked'}), 200
+
 
     @app.route('/products/<int:product_id>/unlike', methods=['POST'])
     @unexpected_error

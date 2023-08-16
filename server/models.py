@@ -30,7 +30,6 @@ class User(db.Model):
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
-
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -41,22 +40,21 @@ class User(db.Model):
         self.likes.remove(product)
 
     def is_liking(self, product):
-        return product in self.likes
+        return product in self.likes  # Check if the product is in the user's likes
 
     def to_dict(self):
         return {
             'id': self.id,
             'username': self.username,
             'email': self.email,
-            'first_name': self.first_name,  # Add this line
-            'last_name': self.last_name,    # Add this line
-            'shipping_address': self.shipping_address, # Add this line
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'shipping_address': self.shipping_address,
             'likes': [product.id for product in self.likes],
         }
 
-    
     @property
-    def is_active(self): # Added this property method
+    def is_active(self):
         return self.active
 
 class Product(db.Model):
