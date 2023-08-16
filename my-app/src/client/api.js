@@ -180,11 +180,6 @@ export async function getLikes(productId) {
     return handleResponse(response);
 }
 
-// Function to get all likes for the current user
-export async function getUserLikes(userId) {
-    const response = await fetch(`${API_URL}/user/${userId}/likes`);
-    return handleResponse(response);
-}
 
 //this is to get total likes for a product not liked by user
 // Function to get product likes by product id
