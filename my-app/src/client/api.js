@@ -194,12 +194,13 @@ export async function getProductLikes(productId) {
 }
 
 // Function to create a review
-export async function createReview(reviewData, productId, comment, rating, date_posted) {
+export async function createReview(productId, rating, comment, date_posted) {
     const userId = getCurrentUser().id ?? 1; // Updated to userId
+    const reviewData = { productId, userId, comment, rating, date_posted }; // Constructing the review data object
     const response = await fetch(`${API_URL}/reviews`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reviewData, productId, userId, comment, rating, date_posted)
+        body: JSON.stringify(reviewData) // Passing the review data object
     });
     return handleResponse(response);
 }

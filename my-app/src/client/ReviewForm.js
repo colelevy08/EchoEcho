@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { getAvailableProducts, createReview } from './api.js'; // Make sure to define the createReview function in your API file
 
 function ReviewForm() {
@@ -10,14 +9,13 @@ function ReviewForm() {
   const [comment, setComment] = useState("");
   const [message, setMessage] = useState(''); // To show success or error messages
 
-
   useEffect(() => {
     const fetchProducts = async () => {
         const productsList = await getAvailableProducts();
         setProducts(productsList);
     };
     fetchProducts();
-}, []);
+  }, []);
   
   const handleDropdownChange = (event) => {
     setSelectedProduct(event.target.value);
@@ -27,8 +25,9 @@ function ReviewForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      //Use selectedProduct as the product to be reviewed
-      const data = await createReview(selectedProduct, rating, comment);
+      // Use selectedProduct as the product to be reviewed
+      const date_posted = new Date().toISOString(); // Example of adding a date_posted, modify as needed
+      const data = await createReview(selectedProduct, rating, comment, date_posted);
       setMessage('Review submitted successfully!');
     } catch (error) {
       setMessage('Error creating review');

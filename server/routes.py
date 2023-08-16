@@ -231,7 +231,7 @@ def register_routes(app):
     @unexpected_error
     @commit_or_rollback_error
     def create_review():
-        data = request.get_json()
+        data = request.is_json
 
         user_id = data.get('userId')
         if not user_id:
