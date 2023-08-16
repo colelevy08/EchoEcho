@@ -27,11 +27,11 @@ function ProductList() {
   return (
     <div>
       <h1>Products</h1>
-      <Link to="/product/create">Create Product</Link> {/* Link to the ProductForm */}
+      <Link to="/products/create">Create Product</Link> {/* Link to the ProductForm */}
       {/* Iterate over each product and display its name, description, and price */}
       {products.map(product => (
         <div key={product.id}>
-          <h2><Link to={`/product/${product.id}`}>{product.name}</Link></h2>
+          <h2><Link to={`/products/${product.id}`}>{product.name}</Link></h2>
           <p>{product.description}</p>
           <p>${product.price}</p>
         </div>
