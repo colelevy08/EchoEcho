@@ -43,7 +43,7 @@ const Dropdown = () => {
                     ))}
                 </select>
 
-                <label>
+                <label className="block mb-4">
                     Quantity:
                     <input 
                         type="number" 

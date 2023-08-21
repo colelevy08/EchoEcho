@@ -38,6 +38,25 @@ Welcome to EchoEcho, the ultimate social media platform engineered exclusively f
 
 
 # Component Tree:
+api
+ErrorBoundary
+    Dashboard
+        Homepage
+            LoginForm
+            SignnupForm
+                UserForm
+        ProductList
+            ProductDetail
+            ProductForm
+        MyLikes
+        ReviewList
+            ReviewForm
+        OrderList
+            OrderForm
+        UserList
+        UserDetail
+        UserContet
+
 
 # API Routes:
 

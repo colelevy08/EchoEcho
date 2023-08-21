@@ -35,15 +35,15 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>
+      <label className="block mb-4">
         Email:
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-2 border rounded mt-2" />
       </label>
-      <label>
+      <label className="block mb-4">
         Password:
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full p-2 border rounded mt-2" />
       </label>
-      <input type="submit" value="Log In" />
+      <input type="submit" value="Log In" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer" />
     </form>
   );
 }

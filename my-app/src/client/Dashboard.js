@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'; // Import useState, useEffect, and useRef
 import { Link } from 'react-router-dom';
-import '../App.css'; // CSS import
 
 function Dashboard() {
   // const [player, setPlayer] = useState(null); // Commented out to suppress warning
@@ -38,22 +37,20 @@ function Dashboard() {
     }
   }, []);
 
-  return (
-    <div className="dashboard">
-      <h1>EchoEcho</h1>
-      <ul className="dashboard-links">
-        <li><Link className="dashboard-link" to="/products">Product Listings</Link></li>
-        <li><Link className="dashboard-link" to="/MyLikes">Liked Products</Link></li>
-        <li><Link className="dashboard-link" to="/reviews">Reviews</Link></li>
-        <li><Link className="dashboard-link" to="/users">Friends</Link></li>
-        <li><Link className="dashboard-link" to="/orders">Orders</Link></li>
-        <li><Link className="dashboard-link" to="/HomePage">HomePage</Link></li>
-      </ul>
-      <div className="video-container">
-        <div ref={playerRef}></div>
+  function Dashboard() {
+    return (
+      <div className="text-center p-10">
+        <h1 className="text-4xl font-bold mb-4">EchoEcho</h1>
+        <ul className="space-y-2">
+          <li><Link className="text-blue-500 underline" to="/products">Marketplace</Link></li>
+          <li><Link className="text-blue-500 underline" to="/MyLikes">Wishlist</Link></li>
+          <li><Link className="text-blue-500 underline" to="/reviews">User Reviews</Link></li>
+          <li><Link className="text-blue-500 underline" to="/users">Friends</Link></li>
+          <li><Link className="text-blue-500 underline" to="/orders">Orders</Link></li>
+        </ul>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Dashboard;
