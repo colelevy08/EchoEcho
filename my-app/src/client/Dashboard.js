@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'; // Import useState, useEffect, and useRef
+import React, { useEffect, useRef } from 'react'; // Import useState, useEffect, and useRef
 import { Link } from 'react-router-dom';
 
 function Dashboard() {

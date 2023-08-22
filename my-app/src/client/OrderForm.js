@@ -23,7 +23,7 @@ const OrderForm = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const data = await createOrder(selectedProduct, quantity, address);
+            await createOrder(selectedProduct, quantity, address);
             setMessage(`Order created successfully for your product!`);
         } catch (error) {
             setMessage('Error creating order');
