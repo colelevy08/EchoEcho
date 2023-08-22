@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { createProduct } from './api.js'; // Updated function name
 
 function ProductForm() {
@@ -34,6 +35,7 @@ function ProductForm() {
         </label>
         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Create Product</button>
       </form>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
       {message && <div className="text-green-500">{message}</div>}
     </div>
   );

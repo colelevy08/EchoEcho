@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { createReview } from './api.js';
 
@@ -29,6 +30,7 @@ function ReviewForm() {
   };
 
   return (
+    <div>
     <form onSubmit={handleSubmit} className="space-y-4">
       <label>
         Product ID:
@@ -44,6 +46,8 @@ function ReviewForm() {
       </label>
       <input type="submit" value="Add Review" className="px-4 py-2 bg-blue-500 text-white rounded" />
     </form>
+    <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
+    </div>
   );
 }
 

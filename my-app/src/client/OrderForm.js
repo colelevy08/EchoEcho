@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getAvailableProducts, createOrder } from './api.js';
 
 function OrderForm() {
@@ -69,6 +70,7 @@ function OrderForm() {
 
         <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Create Order</button>
       </form>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
 
       {message && <p className="text-green-500">{message}</p>}
     </div>
