@@ -13,7 +13,7 @@ import ReviewForm from './client/ReviewForm.js';
 import ReviewList from './client/ReviewList.js';
 import SignupForm from './client/SignupForm.js';
 import UserDetail from './client/UserDetail.js';
-import UserForm from './client/UserForm.js';
+// import UserForm from './client/UserForm.js';
 import UserList from './client/UserList.js';
 import MyLikes from './client/MyLikes.js';
 import { getCurrentUser } from './client/api.js';
@@ -57,26 +57,25 @@ function App() {
     <Router>
       <UserProvider value={{ user, setUser, logoutUser }}>
         <div className="container mx-auto text-center p-10">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/products" element={<ProductList />} />
-            <Route path="/products/create" element={<ProductForm />} />
-            <Route path="/products/:id" element={<ProductDetail />} />
-            <Route path="/orders" element={<OrderList />} />
-            <Route path="/orders/create" element={<OrderForm />} />
-            <Route path="/reviews" element={<ReviewList />} />
-            <Route path="/reviews/create" element={<ReviewForm />} />
-            <Route path="/users" element={<UserList />} />
-            <Route path="/users/create" element={<UserForm />} />
-            <Route path="/users/:id" element={<UserDetail />} />
-            <Route path="/MyLikes" element={<MyLikes />} />
-            <Route path="/orders/OrderForm" element={<OrderForm />} />
-            <Route path="/reviews/ReviewForm" element={<ReviewForm />} />
-            <Route path="/HomePage" element={<HomePage />} />
-          </Routes>
+        <Routes>
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/products" element={<ProductList />} />
+          <Route path="/products/create" element={<ProductForm />} />
+          <Route path="/products/:id" element={<ProductDetail />} />
+          <Route path="/orders" element={<OrderList />} />
+          <Route path="/orders/create" element={<OrderForm />} />
+          <Route path="/reviews" element={<ReviewList />} />
+          <Route path="/reviews/create" element={<ReviewForm />} />
+          <Route path="/users" element={<UserList />} />
+          {/* <Route path="/users/create" element={<UserForm />} /> */}
+          <Route path="/users/:id" element={<UserDetail />} />
+          <Route path="/MyLikes" element={<MyLikes />} />
+          <Route path="/orders/OrderForm" element={<OrderForm />} />
+          <Route path="/reviews/ReviewForm" element={<ReviewForm />} />
+          <Route path="/HomePage" element={<HomePage />} />
+        </Routes>
         </div>
       </UserProvider>
     </Router>
