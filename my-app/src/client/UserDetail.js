@@ -34,15 +34,14 @@ function UserDetail() {
   }
 
   return (
-    <div>
-        <h1>{user.username}</h1>
-        <p>Email: {user.email}</p>
-        <p>First Name: {user.first_name}</p> 
-        <p>Last Name: {user.last_name}</p>   
-        <p>Shipping Address: {user.shipping_address}</p> 
+    <div className="max-w-md mx-auto p-4 bg-gray-100 rounded shadow">
+      <h1 className="text-2xl font-bold mb-2">{user.username}</h1>
+      <p>Email: {user.email}</p>
+      <p>First Name: {user.first_name}</p>
+      <p>Last Name: {user.last_name}</p>
+      <p>Shipping Address: {user.shipping_address}</p>
     </div>
-);
-
+  );
 }
 
 export default UserDetail;

@@ -43,17 +43,17 @@ function MyLikes() {
   }, []);
 
   return (
-    <div>
-      <h2>My Likes</h2>
-      <h2><Link to="/Dashboard">Back to The Music</Link></h2>
+    <div className="container mx-auto p-4">
+      <h2 className="text-2xl font-bold mb-4">Wishlist</h2>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
       <ul>
         {likes.map(like => (
-          <li key={like.id}>
-            <p>{like.product.name}</p>
-            <p>{like.product.description}</p>
-            <p>{like.product.price}</p>
-            <button onClick={() => handleToggleLike(like.id)}>
-              {likedProducts[like.id] ? 'Unlike' : 'Like'} {/* Change button text based on like state */}
+          <li key={like.id} className="border p-4 mb-4">
+            <p className="text-lg font-semibold">{like.product.name}</p>
+            <p className="text-gray-600">{like.product.description}</p>
+            <p className="text-green-500">${like.product.price}</p>
+            <button onClick={() => handleToggleLike(like.id)} className={`px-4 py-2 rounded ${likedProducts[like.id] ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>
+              {likedProducts[like.id] ? 'Unlike' : 'Like'}
             </button>
           </li>
         ))}

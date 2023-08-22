@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../App.css'; // CSS import
 import { createProduct } from './api.js'; // Updated function name
 
 function ProductForm() {
@@ -19,23 +18,23 @@ function ProductForm() {
   };
 
   return (
-    <div className="ProductForm">
-      <form onSubmit={handleSubmit}>
-        <label>
+    <div className="container mx-auto p-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block">
           Name:
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="block w-full p-2 border rounded" />
         </label>
-        <label>
+        <label className="block">
           Description:
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="block w-full p-2 border rounded" />
         </label>
-        <label>
+        <label className="block">
           Price:
-          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required />
+          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required className="block w-full p-2 border rounded" />
         </label>
-        <button type="submit">Create Product</button>
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Create Product</button>
       </form>
-      {message && <div>{message}</div>}
+      {message && <div className="text-green-500">{message}</div>}
     </div>
   );
 }

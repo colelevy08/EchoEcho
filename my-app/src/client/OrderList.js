@@ -38,30 +38,31 @@ function OrderList() {
     fetchProducts();
   }, []);  // Empty dependency array ensures this useEffect hook runs once on component mount
 
-  return (
-    <div>
-      <h1>Orders</h1>
-      <h2><Link to={`./OrderForm`}>Place an Order</Link></h2>
-      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
+    return (
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-4">Orders</h1>
+        <h2 className="text-lg mb-4"><Link to={`./OrderForm`} className="text-blue-500">Place an Order</Link></h2>
+        <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
+  
+        {orders.map(order => {
+          const product = products.find(p => p.id === order.product_id);
+  
+          return (
+            <div key={order.id} className="border p-4 mb-4">
+              <h3 className="text-lg font-semibold">Order ID: {order.id}</h3>
+              <p>User ID: {order.user_id}</p>
+              <p>Product Name: {product ? product.name : 'Product not found'}</p>
+              <p>Product ID: {order.product_id}</p>
+              <p>Quantity: {order.quantity}</p>
+              <p>Status: {order.status}</p>
+              <p>Shipping Address: {order.shippingAddress}</p>
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+  
+  export default OrderList;
+  
 
-      {/* Iterate over each order and display its details */}
-      {orders.map(order => {
-        const product = products.find(p => p.id === order.product_id); // Moved inside the map function
-
-        return (
-          <div key={order.id}>
-            <h3>Order ID: {order.id}</h3>
-            <p>User ID: {order.user_id}</p>
-            <p>Product Name: {product ? product.name : 'Product not found'}</p>
-            <p>Product ID: {order.product_id}</p>
-            <p>Quantity: {order.quantity}</p>
-            <p>Status: {order.status}</p>
-            <p>Shipping Address: {order.shippingAddress}</p>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-export default OrderList;

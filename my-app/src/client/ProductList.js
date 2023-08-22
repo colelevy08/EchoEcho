@@ -25,16 +25,15 @@ function ProductList() {
   }, []);  // The empty dependency array ensures this useEffect hook runs once on component mount
 
   return (
-    <div>
-      <h1>Products</h1>
-      <Link to="/products/create">Create Product</Link> {/* Link to the ProductForm */}
-      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
-      {/* Iterate over each product and display its name, description, and price */}
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">Available Items For Purchase</h1>
+      <Link to="/products/create" className="text-blue-500 mb-4">Sell an item</Link>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
       {products.map(product => (
-        <div key={product.id}>
-          <h2><Link to={`/products/${product.id}`}>{product.name}</Link></h2>
-          <p>{product.description}</p>
-          <p>${product.price}</p>
+        <div key={product.id} className="border p-4 mb-4">
+          <h2><Link to={`/products/${product.id}`} className="text-blue-500 text-lg font-semibold">{product.name}</Link></h2>
+          <p className="text-gray-600">{product.description}</p>
+          <p className="text-green-500">${product.price}</p>
         </div>
       ))}
     </div>

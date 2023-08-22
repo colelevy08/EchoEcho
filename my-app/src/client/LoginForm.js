@@ -33,8 +33,9 @@ function LoginForm() {
     }
   };
 
+
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded shadow">
       <label className="block mb-4">
         Email:
         <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-2 border rounded mt-2" />

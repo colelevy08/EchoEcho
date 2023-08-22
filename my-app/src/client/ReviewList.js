@@ -38,19 +38,17 @@ function ReviewList() {
   }, []);  // Empty dependency array ensures this useEffect hook runs once on component mount
 
   return (
-    <div>
-      <h1>Reviews</h1>
-      <h2><Link to={`./ReviewForm`}>Leave a Review</Link></h2>
-      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
-      {/* Iterate over each review and display its product, comment, and rating */}
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">User Reviews</h1>
+      <h2 className="text-lg mb-4"><Link to={`./ReviewForm`} className="text-blue-500">Leave a Review</Link></h2>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
       {reviews.map(review => {
-        // Find the corresponding product for the review
         const product = products.find(p => p.id === review.product_id);
         return (
-          <div key={review.id}>
-            <h3>{product ? product.name : 'Product not found'}</h3> {/* Displaying the product name */}
-            <p>{review.comment}</p>
-            <p>Rating: {review.rating}</p>
+          <div key={review.id} className="border p-4 mb-4">
+            <h3 className="text-lg font-semibold">{product ? product.name : 'Product not listed in marketplace'}</h3>
+            <p className="text-gray-600">{review.comment}</p>
+            <p className="text-yellow-500">Rating: {review.rating}</p>
           </div>
         );
       })}

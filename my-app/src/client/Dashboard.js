@@ -37,20 +37,18 @@ function Dashboard() {
     }
   }, []);
 
-  function Dashboard() {
-    return (
-      <div className="text-center p-10">
-        <h1 className="text-4xl font-bold mb-4">EchoEcho</h1>
-        <ul className="space-y-2">
-          <li><Link className="text-blue-500 underline" to="/products">Marketplace</Link></li>
-          <li><Link className="text-blue-500 underline" to="/MyLikes">Wishlist</Link></li>
-          <li><Link className="text-blue-500 underline" to="/reviews">User Reviews</Link></li>
-          <li><Link className="text-blue-500 underline" to="/users">Friends</Link></li>
-          <li><Link className="text-blue-500 underline" to="/orders">Orders</Link></li>
-        </ul>
-      </div>
-    );
-  }
+  return (
+    <div className="text-center p-10">
+      <h1 className="text-4xl font-bold mb-4">EchoEcho</h1>
+      <ul className="space-y-2">
+        <li><Link className="text-blue-500 underline" to="/products">Marketplace</Link></li>
+        <li><Link className="text-blue-500 underline" to="/MyLikes">Wishlist</Link></li>
+        <li><Link className="text-blue-500 underline" to="/reviews">User Reviews</Link></li>
+        <li><Link className="text-blue-500 underline" to="/users">Friends</Link></li>
+        <li><Link className="text-blue-500 underline" to="/orders">Orders</Link></li>
+      </ul>
+    </div>
+  );
 }
 
 export default Dashboard;

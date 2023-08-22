@@ -35,19 +35,18 @@ function ReviewForm() {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-
-        <select value={selectedProduct} onChange={handleDropdownChange}>
-            <option value="">Select a product</option>
-            {products.map(product => (
-                <option key={product.id} value={product.id}>{product.name}</option>
-            ))}
+    <div className="container mx-auto p-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <select value={selectedProduct} onChange={handleDropdownChange} className="block w-full p-2 border rounded">
+          <option value="">Select a product</option>
+          {products.map(product => (
+            <option key={product.id} value={product.id}>{product.name}</option>
+          ))}
         </select>
 
-        <label>
+        <label className="block">
           Rating:
-          <select value={rating} onChange={e => setRating(e.target.value)}>
+          <select value={rating} onChange={e => setRating(e.target.value)} className="block w-full p-2 border rounded">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -62,17 +61,15 @@ function ReviewForm() {
         </label>
 
 
-        <label>
+        <label className="block">
           Comment:
-          <textarea value={comment} onChange={e => setComment(e.target.value)} />
+          <textarea value={comment} onChange={e => setComment(e.target.value)} className="block w-full p-2 border rounded" />
         </label>
 
-        <input type="submit" value="Create Review" />
-
+        <input type="submit" value="Create Review" className="px-4 py-2 bg-blue-500 text-white rounded" />
       </form>
 
-      {message && <p>{message}</p>} {/* Display the message */}
-
+      {message && <p className="text-green-500">{message}</p>}
     </div>
   );
 }

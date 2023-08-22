@@ -55,11 +55,11 @@ function ProductDetail() {
 
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p>Description: {product.description}</p>
-      <p>Price: ${product.price}</p>
-      <button onClick={handleLikeUnlike}>{isLiked ? 'Unlike' : 'Like'}</button> {/* Toggle button text */}
+    <div className="container mx-auto p-4">
+      <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
+      <p className="text-lg text-gray-600 mb-2">Description: {product.description}</p>
+      <p className="text-green-500 mb-4">Price: ${product.price}</p>
+      <button onClick={handleLikeUnlike} className={`px-4 py-2 rounded ${isLiked ? 'bg-red-500 text-white' : 'bg-blue-500 text-white'}`}>{isLiked ? 'Unlike' : 'Like'}</button>
     </div>
   );
 }

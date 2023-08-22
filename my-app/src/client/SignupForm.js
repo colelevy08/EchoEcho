@@ -26,7 +26,7 @@ function SignupForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded shadow">
       <label>
         Username:
         <input type="text" value={username} onChange={e => setUsername(e.target.value)} required />
@@ -52,7 +52,7 @@ function SignupForm() {
         <input type="text" value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} />
       </label>
       {error && <p>{error}</p>}
-      <input type="submit" value="Sign Up" />
+      <input type="submit" value="Sign Up" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer" />
     </form>
   );
 }

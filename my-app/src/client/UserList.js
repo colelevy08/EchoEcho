@@ -23,20 +23,20 @@ function UserList() {
     fetchUsers();
   }, []);  // Empty dependency array ensures this useEffect hook runs once on component mount
 
-  return (
-    <div>
-      <h1>Users</h1>
-      <h2><Link to="/Dashboard">Back to The Music</Link></h2> {/* Corrected link */}
-      {/* Iterate over each user and display its username and email */}
-      {users.map(user => (
-        <div key={user.id}>
-          <h2><Link to={`/users/${user.id}`}>{user.username}</Link></h2>
-          <h3>{user.first_name} {user.last_name}</h3>
-          <p>{user.email}</p>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-export default UserList;
+    return (
+      <div className="max-w-lg mx-auto p-4 bg-gray-100 rounded shadow">
+        <h1 className="text-2xl font-bold mb-4">Users</h1>
+        <h2><Link to="/Dashboard" className="text-blue-500 underline">Back to The Music</Link></h2>
+        {users.map(user => (
+          <div key={user.id} className="border-b pb-2 mb-2">
+            <h2><Link to={`/users/${user.id}`} className="text-blue-500 underline">{user.username}</Link></h2>
+            <h3 className="text-lg">{user.first_name} {user.last_name}</h3>
+            <p className="text-gray-600">{user.email}</p>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  export default UserList;
+  
