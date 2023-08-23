@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {  unlikeProduct, likeProduct, getUserLikes, getCurrentUser } from './api.js';
+import { unlikeProduct, likeProduct, getUserLikes, getCurrentUser } from './api.js';
 
 function MyLikes() {
   const [likes, setLikes] = useState([]);
@@ -23,18 +23,22 @@ function MyLikes() {
 
   const fetchLikes = async () => {
     try {
-      const user = await getCurrentUser();
-      const userLikes = await getUserLikes(user.id);
-      setLikes(userLikes);
-
-      // Initialize the likedProducts state based on user's likes
-      const likedProductsMap = {};
-      userLikes.forEach(like => {
-        likedProductsMap[like.product.id] = true;
-      });
-      setLikedProducts(likedProductsMap);
+      const currentUser = await getCurrentUser();
+      const userId = currentUser.id;
+      const response = await getUserLikes(userId);
+      if (response.message) {
+        console.log(response.message);
+        setLikes([]);
+      } else {
+        setLikes(response);
+        const likedProductsMap = response.reduce((acc, like) => {
+          acc[like.id] = true;
+          return acc;
+        }, {});
+        setLikedProducts(likedProductsMap);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error:', error);
     }
   };
 

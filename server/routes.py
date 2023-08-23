@@ -56,9 +56,9 @@ def register_routes(app):
         if not product:
             return jsonify({'error': 'Product not found'}), 404
 
-        # Check if the current user is anonymous
+        # If the current user is not logged in, return a message
         if current_user.is_anonymous:
-            return jsonify({'error': 'Anonymous users cannot like products'}), 403
+            return jsonify({'message': 'Please login to like products'}), 200
 
         if current_user.is_liking(product):
             return jsonify({'error': 'Product already liked'}), 400
@@ -81,15 +81,24 @@ def register_routes(app):
         db.session.commit()
         return jsonify({'message': 'Product unliked'}), 200
 
-
     @app.route('/user/<int:user_id>/likes', methods=['GET'])
     @unexpected_error
     @commit_or_rollback_error
     def get_user_likes(user_id):
+        # Check if the user_id is provided
+        if user_id is None:
+            # Handle the case for anonymous users
+            return jsonify({'message': 'Please login to see your wishlist'}), 200
+
+        # Fetch the user from the database
         user = User.query.get(user_id)
         if not user:
             return jsonify({'error': 'User not found'}), 404
+
+        # Fetch the liked products for the logged-in user
         liked_products = user.likes
+
+        # Return the liked products as JSON
         return jsonify([product.to_dict() for product in liked_products]), 200
 
     @app.route('/products/<int:product_id>/likes', methods=['GET'])
@@ -108,6 +117,7 @@ def register_routes(app):
     def get_user_liked_products():
         liked_products = current_user.likes
         return jsonify([product.to_dict() for product in liked_products]), 200
+
     
     @app.route('/users/current-user', methods=['GET'])
     @unexpected_error
