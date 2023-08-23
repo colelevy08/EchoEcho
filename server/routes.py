@@ -48,7 +48,7 @@ def register_routes(app):
         reviews = Review.query.all()
         return jsonify([review.to_dict() for review in reviews]), 200
 
-    @app.route('/products/<int:product_id>/like', methods=['POST'])
+    @app.route('/products/<int:product_id>/like', methods=['PUT'])
     @unexpected_error
     @commit_or_rollback_error
     def like_product(product_id):
@@ -68,7 +68,7 @@ def register_routes(app):
         return jsonify({'message': 'Product liked'}), 200
 
 
-    @app.route('/products/<int:product_id>/unlike', methods=['POST'])
+    @app.route('/products/<int:product_id>/unlike', methods=['PUT'])
     @unexpected_error
     @commit_or_rollback_error
     def unlike_product(product_id):
