@@ -33,14 +33,16 @@ class User(db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def like_product(self, product):
-        self.likes.append(product)
-    
-    def unlike_product(self, product):
-        self.likes.remove(product)
-
     def is_liking(self, product):
-        return product in self.likes  # Check if the product is in the user's likes
+        return self.likes.filter(likes.c.product_id == product.id).count() > 0
+
+    def like_product(self, product):
+        if not self.is_liking(product):
+            self.likes.append(product)
+
+    def unlike_product(self, product):
+        if self.is_liking(product):
+            self.likes.remove(product)
 
     def to_dict(self):
         return {
