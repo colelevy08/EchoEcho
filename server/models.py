@@ -80,6 +80,7 @@ class Product(db.Model):
             'image_url': self.image_url,
             'stock_quantity': self.stock_quantity,
             'category': self.category,
+            'liked_by': [user.id for user in self.liked_by], # Include IDs of users who have liked this product
         }
 
 class Order(db.Model):

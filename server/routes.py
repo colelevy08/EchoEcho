@@ -132,8 +132,12 @@ def register_routes(app):
     def get_current_user():
         if current_user.is_authenticated:
             return jsonify(current_user.to_dict()), 200
+        elif current_user.is_anonymous: # Handling anonymous users
+            # Return some identifier for the anonymous user, or handle as you see fit
+            return jsonify({'message': 'Anonymous user'}), 200
         else:
             return jsonify({'message': 'No user logged in'}), 200
+
 
         
     @app.route('/signup', methods=['POST'])

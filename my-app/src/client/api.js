@@ -12,10 +12,11 @@ async function handleResponse(response) {
     }
   }
   
-  // Function to get the current user
-  export async function getCurrentUser() {
+// Function to get the current user
+export async function getCurrentUser() {
     const response = await fetch(`${API_URL}/users/current-user`);
-    return handleResponse(response) ?? null; // Return null if no user is found
+    const data = await handleResponse(response);
+    return data ?? null; // Return null if no user is found
   }
   
 // Function to get all users
