@@ -138,7 +138,7 @@ ErrorBoundary
 - Make sure to follow any specific instructions or configurations mentioned in the `webpack.config.js` for the frontend.
 - Check the `app.py`, `models.py`, and `routes.py` files in the `server` directory for any specific configurations or environment variables that need to be set for the backend.
 
-By following these instructions, you should be able to run the app locally. If you encounter any issues, please refer to the specific files mentioned above or consult the documentation in the repository.
+By following these instructions, you should be able to run the app locally. If you encounter any issues, please refer to the specific files mentioned above or consult the documentation in the repository.  
 
 
 
