@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
 }
 
@@ -26,9 +26,15 @@
 
 .App-link {
   color: #61dafb;
-}
+  transition: 0.3s; /* Added for smooth transition */
+/* } */
 
-@keyframes App-logo-spin {
+/* .App-link:hover {
+  color: #fdcb6e; /* Added for hover effect */
+/* } */ 
+
+
+/* @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
   }
@@ -68,4 +74,4 @@ form button, form input[type="submit"] {
 
 .error {
   color: red;
-}
+} */ 

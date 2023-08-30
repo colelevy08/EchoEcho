@@ -1,5 +1,5 @@
-
 import React, { useState, useContext } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { login } from './api.js'; // Import the login function from the API
 import { UserContext } from './UserContext.js';  // Import UserContext
@@ -23,8 +23,8 @@ function LoginForm() {
         if (user) {
             console.log('User logged in:', user);
             setUser(user);  // Set the user state
-            // After successfully logging in the user, redirect to the home page
-            navigate('/');
+            // After successfully logging in the user, redirect to the dashboard
+            navigate('/Dashboard');
         } else {
             console.log('User logged in: user undefined');
         }
@@ -34,18 +34,22 @@ function LoginForm() {
     }
   };
 
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
+    <div>
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto p-4 bg-gray-100 rounded shadow">
+      <label className="block mb-4">
         Email:
-        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} className="w-full p-2 border rounded mt-2" />
       </label>
-      <label>
+      <label className="block mb-4">
         Password:
-        <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full p-2 border rounded mt-2" />
       </label>
-      <input type="submit" value="Log In" />
+      <input type="submit" value="Log In" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer" />
     </form>
+    <h2 className="text-lg mb-4"><Link to="/HomePage" className="text-blue-500">Cancel</Link></h2>
+    </div>
   );
 }
 

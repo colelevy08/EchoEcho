@@ -1,10 +1,11 @@
-import os
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_cors import CORS
 from models import db, User
+from routes import register_routes # Import the register_routes function
+import os
 
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
@@ -40,11 +41,19 @@ def create_app(test_config=None):
     def load_user(id):
         return User.query.get(int(id))
 
-    from routes import main_routes
-    app.register_blueprint(main_routes)
+    # Import and register routes
+    register_routes(app) # Call the register_routes function with the app
+
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        if path != "" and os.path.exists("build/" + path):
+            return send_from_directory('build', path)
+        else:
+            return send_from_directory('build', 'index.html')
 
     return app
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(debug=True, port=5555)
+    app.run(debug=True, host='0.0.0.0', port=5555) # Set the port to 5555

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { createReview } from './api.js';
 
@@ -29,21 +30,24 @@ function ReviewForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
+    <form onSubmit={handleSubmit} className="space-y-4">
       <label>
         Product ID:
-        <input type="number" value={productId} onChange={e => setProductId(e.target.value)} />
+        <input type="number" value={productId} onChange={e => setProductId(e.target.value)} className="block w-full p-2 border rounded" />
       </label>
       <label>
         Review:
-        <input type="text" value={body} onChange={e => setBody(e.target.value)} />
+        <input type="text" value={body} onChange={e => setBody(e.target.value)} className="block w-full p-2 border rounded" />
       </label>
       <label>
         Rating:
-        <input type="number" value={rating} onChange={e => setRating(e.target.value)} />
+        <input type="number" value={rating} onChange={e => setRating(e.target.value)} className="block w-full p-2 border rounded" />
       </label>
-      <input type="submit" value="Add Review" />
+      <input type="submit" value="Add Review" className="px-4 py-2 bg-blue-500 text-white rounded" />
     </form>
+    <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
+    </div>
   );
 }
 

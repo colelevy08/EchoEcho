@@ -1,49 +1,43 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { createProduct } from './api.js';
+import { Link } from 'react-router-dom';
+import { createProduct } from './api.js'; // Updated function name
 
 function ProductForm() {
-  // Local states for form inputs
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  
-  // useNavigate hook for redirecting to other routes
-  let history = useNavigate();
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [price, setPrice] = useState('');
+  const [message, setMessage] = useState('');
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     try {
-      // Call the createProduct API method to create a new product
-      const response = await createProduct({
-        name,
-        description,
-        price
-      });
-      console.log('Product created:', response.data);
-      // After successfully creating the product, redirect to the product list
-      history.push('/products');
+      const data = await createProduct(name, description, price); // Using the imported function
+      setMessage(`Product created successfully: ${data.name}`);
     } catch (error) {
-      console.error('Error creating product:', error);
+      setMessage('Error creating product');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input type="text" value={name} onChange={e => setName(e.target.value)} />
-      </label>
-      <label>
-        Description:
-        <input type="text" value={description} onChange={e => setDescription(e.target.value)} />
-      </label>
-      <label>
-        Price:
-        <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
-      </label>
-      <input type="submit" value="Create Product" />
-    </form>
+    <div className="container mx-auto p-4">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <label className="block">
+          Name:
+          <input type="text" value={name} onChange={(e) => setName(e.target.value)} required className="block w-full p-2 border rounded" />
+        </label>
+        <label className="block">
+          Description:
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} required className="block w-full p-2 border rounded" />
+        </label>
+        <label className="block">
+          Price:
+          <input type="number" value={price} onChange={(e) => setPrice(e.target.value)} required className="block w-full p-2 border rounded" />
+        </label>
+        <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">Create Product</button>
+      </form>
+      <h2 className="text-lg mb-4"><Link to="/Dashboard" className="text-blue-500">Back to The Music</Link></h2>
+      {message && <div className="text-green-500">{message}</div>}
+    </div>
   );
 }
 

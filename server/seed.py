@@ -1,7 +1,14 @@
 from models import db, User, Product, Order, Review
 from app import create_app
+from faker import Faker
+import random
+from datetime import datetime
 
 app = create_app()
+fake = Faker()
+
+# Number of users to create
+num_users = 5
 
 with app.app_context():
     # Empty the database before seeding
@@ -12,34 +19,50 @@ with app.app_context():
     db.session.commit()
 
     # Create users
-    usernames = ["John Doe", "Jane Smith", "Alice Johnson", "Bob Brown", "Charlie Green"]
-    emails = ["john@example.com", "jane@example.com", "alice@example.com", "bob@example.com", "charlie@example.com"]
-    passwords = ["passwordJohn", "passwordJane", "passwordAlice", "passwordBob", "passwordCharlie"]
-    for i in range(5):
-        user = User.query.filter_by(username=usernames[i]).first()
-        if user is None:
-            user = User(username=usernames[i], email=emails[i])
-            user.set_password(passwords[i])
-            db.session.add(user)
+    users = []
+    for _ in range(num_users):
+        first_name = fake.first_name()
+        last_name = fake.last_name()
+        username = fake.user_name()
+        email = username + "@" + fake.free_email_domain()
+        password = fake.password(length=10, special_chars=True, digits=True, upper_case=True, lower_case=True)
+        shipping_address = fake.address()
+        user = User(first_name=first_name, last_name=last_name, username=username, email=email, shipping_address=shipping_address)
+        user.set_password(password)
+        db.session.add(user)
+        users.append(user)
     db.session.commit()
 
     # Create products
-    product_names = ["Apple Macbook Pro", "Samsung Galaxy S20", "HP Spectre x360", "Canon EOS 5D", "Sony WH-1000XM4"]
-    product_descriptions = ["16-inch MacBook Pro", "Smartphone with 120Hz Display", "Convertible Laptop", "Professional DSLR", "Noise-Canceling Headphones"]
-    product_prices = [2399.99, 999.99, 1349.99, 2599.99, 349.99]
-    for i in range(5):
-        product = Product(name=product_names[i], description=product_descriptions[i], price=product_prices[i])
-        db.session.add(product)
+    products_data = [
+        ("Victrola TurnTable", "Record player from 1985 from Victrola", 2399.99, "/static/record_player.png"),
+        ("Beatles White Album, Original", "Original copy of The Beatles White Album on vinyl", 999.99, "/static/beatles_album.png"),
+        ("Blue Yeti Microphone", "High quality microphone for home studio recording", 1349.99, "/static/blue_yeti.png"),
+        ("Kendrick Lamar's 'To Pimp a Butterfly' on Vinyl", "President Obama's Favorite Kendrick Album on vinyl!", 2599.99, "/static/kendrick_vinyl.png"),
+        ("Les Paul Guitar", "Used Les Paul Guitar. Plays like a dream. Color - Red", 349.99, "/static/les_paul.png"),
+        ("Vintage Headphones", "Classic over-ear headphones with leather cushions", 149.99, "/static/headphones.png"),
+        ("Studio Monitor Speakers", "Professional studio monitor speakers for mixing", 699.99, "/static/speakers.png"),
+        ("Digital Audio Workstation", "Complete recording studio software package", 499.99, "/static/daw.png"),
+        ("MIDI Keyboard Controller", "49-key MIDI keyboard with touch-sensitive pads", 199.99, "/static/midi_keyboard.png"),
+        ("USB Audio Interface", "Compact USB audio interface with preamps", 99.99, "/static/audio_interface.png"),
+    ]
+    products = [Product(name=name, description=desc, price=price, image_url=image_url, stock_quantity=random.randint(1, 100)) for name, desc, price, image_url in products_data]
+    db.session.add_all(products)
     db.session.commit()
 
-    # Create orders and reviews
-    for i in range(1, 6):
-        user = User.query.get(i)
-        for j in range(1, 6):
-            product = Product.query.get(j)
-            order = Order(user_id=user.id, product_id=product.id, quantity=j)
-            db.session.add(order)
-            review = Review(user_id=user.id, product_id=product.id, body=f"This product is amazing! - {user.username}", rating=5)
-            db.session.add(review)
-            user.likes.append(product)
+    # Create orders, reviews, and likes
+    for _ in range(10): # 10 orders and reviews
+        user = random.choice(users)
+        product = random.choice(products)
+        
+        # Create order
+        order = Order(user_id=user.id, product_id=product.id, quantity=random.randint(1, 5), status='Pending', shipping_address=user.shipping_address)
+        db.session.add(order)
+
+        # Create review
+        review = Review(user_id=user.id, product_id=product.id, comment=fake.text(max_nb_chars=200), rating=random.randint(1, 5), date_posted=datetime.utcnow())
+        db.session.add(review)
+
+        # Add product to likes
+        user.likes.append(product)
     db.session.commit()
